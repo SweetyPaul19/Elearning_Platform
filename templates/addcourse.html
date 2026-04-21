@@ -40,6 +40,10 @@
                         <input type="text" class="form-control" id="exampleInputName1" name="name" placeholder="Name">
                       </div>
                       <div class="form-group">
+                        <label for="exampleInputName1">Price</label>
+                        <input type="number" class="form-control" id="exampleInputName1" name="price" placeholder="Price">
+                      </div>
+                      <div class="form-group">
                         <label for="exampleInputName1">Select image</label>
                         <input type="file" class="form-control" id="exampleInputName1" name="file" placeholder="image">
                       </div>
@@ -63,6 +67,7 @@
                           
                           <th>logo</th>
                           <th> Courses </th>
+                          <th>Price</th>
                           <th> Edit</th>
                           <th>Delete</th>
                         </tr>
@@ -71,7 +76,7 @@
                           <tr>
                                 <td><img src="media/{{i.file}}" alt="" width="100px" height="100px"></td>
                                 <td>{{i.name}}</td>
-          
+                                <td>{{i.price}}</td>
                                 <td><a href="addcourse_edit/{{i.id}}">edit</a></td>
                                 <td><a href="addcourse_delete/{{i.id}}">Delete</a></td>
                                 
