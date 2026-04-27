@@ -198,10 +198,10 @@ def teacherdashboard(request):
         return redirect('/teacherslogin')        
 def website_index(request):
     ename=None
-    if request.session.has_key('email'):
-         eid=request.session['email']
-         user=elearning_users.objects.get(email=eid)
-         ename=user.name
+    if request.session.has_key('email'):# Check if user is logged in
+        eid=request.session['email']# Get the email of the logged-in user from the session 
+        user=elearning_users.objects.get(email=eid)# Retrieve the user object based on the email
+        ename=user.name # Get the name of the logged-in user from the user object 
            #loging out process
     admin=headlines.objects.all()
     Coursetype=coursetype.objects.all()
@@ -262,3 +262,7 @@ def user_login(request):
             return redirect('/user_login')
     else:
         return render(request,'user_login.html')
+
+# def courses(request):
+#     course1=course.objects.all()
+#     return render(request,'courses.html',{'course':course1})        
