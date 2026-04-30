@@ -23,6 +23,8 @@ class course(models.Model):
     name=models.CharField(max_length=50)
     file=models.ImageField(upload_to='image',default='')
     price=models.IntegerField(default=0)
+    duration=models.CharField(max_length=50,default='')
+    language=models.CharField(max_length=50,default='')
     def _str_(self):
         return self.name
 class teacher(models.Model):

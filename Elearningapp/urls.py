@@ -27,6 +27,7 @@ urlpatterns=[
     path('about',views.about,name='about'),
     path('contact',views.contact,name='contact'),
     path('join_now',views.join_now,name='join_now'),
-    path('user_login',views.user_login,name='user_login')
+    path('user_login',views.user_login,name='user_login'),
+    path('course_details/<int:id>',views.course_details,name='course_details')
 ]
 

@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>eLEARNING</title>
+    <title>Home</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -45,7 +45,7 @@
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-            <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>eLEARNING</h2>
+            <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>EduNova</h2>
         </a>
         <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
@@ -67,7 +67,7 @@
             </div>
             {% if ename %}
            <a href="" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block"> {{ename}}</a>
-            <a href="" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block"><i class="fa fa-solid fa-power-off"></i></a>
+            <a href="{% url 'user_login' %}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block"><i class="fa fa-solid fa-power-off"></i></a>
            
             {% else %}
             <a href="{% url 'join_now' %}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Join Now<i class="fa fa-arrow-right ms-3"></i></a>
@@ -237,7 +237,7 @@
         <h6 class="section-title bg-white text-center text-primary px-3">Courses</h6>
         <h1 class="mb-5">Popular Courses</h1>
     </div>
-    <div class="container-xxl py-5">
+    <div class="container-xxl py-5" >
         <div class="container">
             <div class="row g-4 justify-content-center">
                 {% for i in course %}
@@ -246,6 +246,7 @@
                         <div class="position-relative overflow-hidden">
                             <img class="img-fluid" src="media/{{ i.file }}" alt="">
                             <div class="w-100 d-flex justify-content-center position-absolute bottom-0 start-0 mb-4">
+                                <a href="{% url 'course_details' i.id %}" class="flex-shrink-0 btn btn-sm btn-primary px-3" style="border-radius:  30px 30px ;">Join Now</a>
                             </div>
                         </div>
                         <div class="text-center p-4 pb-0">
@@ -261,9 +262,8 @@
                             <h5 class="mb-4">{{ i.name }}</h5>
                         </div>
                         <div class="d-flex border-top">
-                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-user-tie text-primary me-2"></i>John Doe</small>
-                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-clock text-primary me-2"></i>1.49 Hrs</small>
-                            <small class="flex-fill text-center py-2"><i class="fa fa-user text-primary me-2"></i>30 Students</small>
+                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-clock text-primary me-2"></i>Duration : {{ i.duration }} Hrs</small>
+                            <small class="flex-fill text-center py-2"><i class="fa fa-user text-primary me-2"></i>Language : {{ i.language }}</small>
                         </div>
                     </div>
                 </div>

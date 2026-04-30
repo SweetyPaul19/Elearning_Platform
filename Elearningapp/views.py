@@ -108,9 +108,11 @@ def addcourse(request):
     if(request.method=='POST'):
         coursetypes=request.POST['coursetypes']
         name=request.POST['name']
+        duration=request.POST['duration']
+        language=request.POST['language']
         price=request.POST['price']
         file=request.FILES['file']
-        course1=course(coursetypes=coursetypes,name=name,price=price,file=file)
+        course1=course(coursetypes=coursetypes,name=name,duration=duration,language=language,price=price,file=file)
         course1.save()
         messages.success(request,'added successfully')
         return redirect('/addcourse')
@@ -123,9 +125,13 @@ def addcourse_edit(request,id):
     if(request.method=="POST"):
         coursetypes=request.POST['coursetypes']
         name=request.POST['name']
+        duration=request.POST['duration']
+        language=request.POST['language']
         price=request.POST['price']
         file=request.FILES['file']
         course1.name=name
+        course1.duration=duration
+        course1.language=language
         course1.price=price
         course1.file=file
         course1.save()
@@ -266,3 +272,6 @@ def user_login(request):
 # def courses(request):
 #     course1=course.objects.all()
 #     return render(request,'courses.html',{'course':course1})        
+def course_details(request,id):
+    course1=course.objects.get(id=id)
+    return render(request,'course_details.html',{'course':course1})
