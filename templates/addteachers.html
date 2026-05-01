@@ -12,10 +12,7 @@
             <div class="page-header">
               <h3 class="page-title"> Form elements </h3>
               <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="#">Forms</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Form elements</li>
-                </ol>
+                
               </nav>
             </div>
             <div class="row">
@@ -42,6 +39,7 @@
                         <label for="exampleInputName1">Enter password</label>
                         <input type="password" class="form-control" id="exampleInputName1" name="password" placeholder="Password">
                       </div>
+                      
                       <div class="form-group">
                         <label for="exampleInputName1">Select image</label>
                         <input type="file" class="form-control" id="exampleInputName1" name="file" placeholder="image">
@@ -71,6 +69,7 @@
                           <th> photo</th>
                             <th> Edit</th>
                           <th>Delete</th>
+                          <th>assign course</th>
                         </tr>
                       </thead>
                         {% for i in course %}
@@ -82,7 +81,7 @@
                                 <td><img src="media/{{i.file}}" alt="" width="100px" height="100px"></td>
                                 <td><a href="addteachers_edit/{{i.id}}">edit</a></td>
                                 <td><a href="addteachers_delete/{{i.id}}">Delete</a></td>
-                                
+                                <td><a href="course_assign/{{i.id}}">Assign</a></td>
                             </tr>
                         {% endfor %}
                       

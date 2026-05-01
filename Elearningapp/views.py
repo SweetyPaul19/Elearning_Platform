@@ -146,6 +146,7 @@ def addcourse_delete(request,id):
     return redirect('/addcourse')
 def addteachers(request):
     course1=teacher.objects.all()
+    course2=course.objects.all()
     if(request.method=='POST'):
         name=request.POST['name']
         phone=request.POST['phone']
@@ -157,7 +158,7 @@ def addteachers(request):
         messages.success(request,'added successfully')
         return redirect('/addteachers')
     else:    
-        return render(request,'addteachers.html',{'course':course1})
+        return render(request,'addteachers.html',{'course':course1,'courses':course2})
 def addteachers_edit(request,id):
     teacher1=teacher.objects.get(id=id)
     if(request.method=="POST"):
@@ -275,3 +276,21 @@ def user_login(request):
 def course_details(request,id):
     course1=course.objects.get(id=id)
     return render(request,'course_details.html',{'course':course1})
+
+def course_assign(request,id):
+    course1=course.objects.all()
+    teacher1=teacher.objects.get(id=id)
+    course_assign1=courseassign.objects.all()
+    if(request.method=="POST"):
+        assigncourse=request.POST['assigncourse']
+        course_assign1=courseassign(course_assigned=assigncourse,teacherid=teacher1.id)
+        course_assign1.save()
+        messages.success(request,'assigned successfully')
+        return redirect('/addteachers')
+    else:
+        return render(request,'course_assign.html',{'teachere':teacher1,'courses':course1,'course_assign':course_assign1}) 
+def course_remove(request,id):
+    course_assign1=courseassign.objects.get(id=id)  # Get the course assignment object based on the provided id 
+    course_assign1.delete()  # Delete the course assignment object from the database
+    messages.success(request,'course removed successfully')  # Display a success message to the user
+    return redirect('/addteachers')           
