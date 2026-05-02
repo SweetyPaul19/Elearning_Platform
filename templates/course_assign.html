@@ -1,0 +1,67 @@
+{% extends 'master.html' %}
+{% load static %}
+{% block title %}
+
+    AdminKit Demo - Bootstrap 5 Admin Template
+
+{% endblock %}
+
+{% block contain %}
+<div class="main-panel">
+          <div class="content-wrapper">
+            <div class="page-header">
+              
+              
+            </div>
+            <div class="row">
+              <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">{{ teachere.name }}</h4>
+                    <p class="card-description"> Teacher name </p>
+                     <form action="{% url 'course_assign' teachere.id %}" method="POST">
+                      {% csrf_token %}
+                      <div class="form-group">
+                        <label for="exampleInputName1">Courses</label>
+                        <select class="form-control" id="exampleInputName1" name="assigncourse">
+                            <option>select course</option>
+                            {% for i in courses %}
+                            <option>{{i.name}}</option> 
+                            {% endfor %}
+                        </select>
+                      </div>
+                    
+                      <button type="submit" class="btn btn-gradient-primary me-2">Assign</button>
+                      <a href="{% url 'addteachers' %}" class="btn btn-light">Cancel</a>
+                    </form>
+                  </div>
+                </div>
+              </div>
+			  <div class="row">
+               <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Assigned Courses to {{ teachere.name }}</h4>
+                  
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          
+                          <th>Assigned course</th>
+                          <th> remove </th>
+                        </tr>
+                      </thead>
+                      {% for i in course_assign %}
+                        <tr>
+                          <td>{{i.course_assigned}}</td>
+                          <td><a href="{% url 'course_remove' i.id %}">Remove</a></td>
+                        </tr>
+                      {% endfor %}
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+                    
+{% endblock %}          

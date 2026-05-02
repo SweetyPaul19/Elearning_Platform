@@ -23,6 +23,9 @@ class course(models.Model):
     name=models.CharField(max_length=50)
     file=models.ImageField(upload_to='image',default='')
     price=models.IntegerField(default=0)
+    duration=models.CharField(max_length=50,default='')
+    language=models.CharField(max_length=50,default='')
+    description=models.CharField(max_length=100,default='')
     def _str_(self):
         return self.name
 class teacher(models.Model):
@@ -30,7 +33,7 @@ class teacher(models.Model):
     email=models.EmailField(max_length=100)
     phone=models.IntegerField(default=0)
     password=models.CharField(max_length=50)   
-    file=models.ImageField(upload_to='image',default='')    
+    file=models.ImageField(upload_to='image',default='')   
     def _str_(self):
         return self.name        
 
@@ -52,3 +55,8 @@ class elearning_users(models.Model):
     address=models.CharField(max_length=100,default='')
     def _str_(self):
         return self.name
+class courseassign(models.Model):
+    course_assigned=models.CharField(max_length=50,default='')
+    teacherid=models.CharField(max_length=50,default='')  
+    def _str_(self):
+        return self.course_assigned      
