@@ -112,7 +112,8 @@ def addcourse(request):
         language=request.POST['language']
         price=request.POST['price']
         file=request.FILES['file']
-        course1=course(coursetypes=coursetypes,name=name,duration=duration,language=language,price=price,file=file)
+        Description=request.POST['Description']
+        course1=course(coursetypes=coursetypes,name=name,duration=duration,language=language,price=price,file=file,Description=Description)
         course1.save()
         messages.success(request,'added successfully')
         return redirect('/addcourse')
@@ -129,11 +130,13 @@ def addcourse_edit(request,id):
         language=request.POST['language']
         price=request.POST['price']
         file=request.FILES['file']
+        Description=request.POST['Description']
         course1.name=name
         course1.duration=duration
         course1.language=language
         course1.price=price
         course1.file=file
+        course1.Description=Description
         course1.save()
         messages.success(request,'edited successfull')
         return redirect('/addcourse')
@@ -275,22 +278,32 @@ def user_login(request):
 #     return render(request,'courses.html',{'course':course1})        
 def course_details(request,id):
     course1=course.objects.get(id=id)
-    return render(request,'course_details.html',{'course':course1})
+    teacherdetails=assignedcourse.objects.filter(course_id=id)
+    d={}
+    for i in teacherdetails:
+        teacherid=i.teacher_id
+        teacherdata=teacher.objects.get(id=teacherid)
+        d[i.teacher_id]={'tname':i.teacher_name,'timage':teacherdata.file}
+    return render(request,'course_details.html',{'course':course1,'teacher':d})
+ 
 
-def course_assign(request,id):
+
+def assigncourse(request,id):
     course1=course.objects.all()
     teacher1=teacher.objects.get(id=id)
-    course_assign1=courseassign.objects.all()
+    assignedcourse1=assignedcourse.objects.all()
     if(request.method=="POST"):
-        assigncourse=request.POST['assigncourse']
-        course_assign1=courseassign(course_assigned=assigncourse,teacherid=teacher1.id)
-        course_assign1.save()
+        course2data=request.POST['course']
+        course2data=course.objects.get(id=course2data)
+        assignedcourse1=assignedcourse(course_id=course2data.id,teacher_id=teacher1.id,course_name=course2data.name,teacher_name=teacher1.name )
+        assignedcourse1.save()
         messages.success(request,'assigned successfully')
-        return redirect('/addteachers')
+        return redirect('/assigncourse')
     else:
-        return render(request,'course_assign.html',{'teachere':teacher1,'courses':course1,'course_assign':course_assign1}) 
+        return render(request,'assigncourse.html',{'teacher':teacher1,'courses':course1,'assignedcourse':assignedcourse1})
+
 def course_remove(request,id):
-    course_assign1=courseassign.objects.get(id=id)  # Get the course assignment object based on the provided id 
-    course_assign1.delete()  # Delete the course assignment object from the database
+    assignedcourse1=assignedcourse.objects.get(id=id)  # Get the course assignment object based on the provided id 
+    assignedcourse1.delete()  # Delete the course assignment object from the database
     messages.success(request,'course removed successfully')  # Display a success message to the user
-    return redirect('/addteachers')           
+    return redirect('/addteachers')

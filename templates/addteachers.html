@@ -71,6 +71,7 @@
                           <th> photo</th>
                             <th> Edit</th>
                           <th>Delete</th>
+                          <th>Assigned Course</th>
                         </tr>
                       </thead>
                         {% for i in course %}
@@ -82,6 +83,7 @@
                                 <td><img src="media/{{i.file}}" alt="" width="100px" height="100px"></td>
                                 <td><a href="addteachers_edit/{{i.id}}">edit</a></td>
                                 <td><a href="addteachers_delete/{{i.id}}">Delete</a></td>
+                                <td><a href="assigncourse/{{i.id}}">Assigned Course</a></td>
                                 
                             </tr>
                         {% endfor %}

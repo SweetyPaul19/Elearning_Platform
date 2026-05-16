@@ -25,7 +25,7 @@ class course(models.Model):
     price=models.IntegerField(default=0)
     duration=models.CharField(max_length=50,default='')
     language=models.CharField(max_length=50,default='')
-    description=models.CharField(max_length=100,default='')
+    Description=models.CharField(max_length=100,default='')
     def _str_(self):
         return self.name
 class teacher(models.Model):
@@ -55,8 +55,13 @@ class elearning_users(models.Model):
     address=models.CharField(max_length=100,default='')
     def _str_(self):
         return self.name
-class courseassign(models.Model):
-    course_assigned=models.CharField(max_length=50,default='')
-    teacherid=models.CharField(max_length=50,default='')  
+
+ 
+
+class assignedcourse(models.Model):
+    course_id=models.CharField(max_length=50,default='')
+    teacher_id=models.CharField(max_length=50,default='') 
+    teacher_name=models.CharField(max_length=50,default='')
+    course_name=models.CharField(max_length=50,default='') 
     def _str_(self):
-        return self.course_assigned      
+        return self.assignedcourse    

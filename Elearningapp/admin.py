@@ -6,5 +6,6 @@ admin.site.register(course)
 admin.site.register(teacher)
 admin.site.register(headlines)
 admin.site.register(elearning_users)
-admin.site.register(courseassign)
+
+admin.site.register(assignedcourse)
 # Register your models here.
