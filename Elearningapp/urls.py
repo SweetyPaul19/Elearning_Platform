@@ -30,6 +30,9 @@ urlpatterns=[
     path('user_login',views.user_login,name='user_login'),
     path('course_details/<int:id>',views.course_details,name='course_details'),
     path('assigncourse/<int:id>',views.assigncourse,name='assigncourse'),
-    path('course_remove/<int:id>',views.course_remove,name='course_remove')
+    path('course_remove/<int:id>',views.course_remove,name='course_remove'),
+    path('forgot_password',views.forgot_password,name='forgot_password'),
+    path('verify_user_otp',views.verify_user_otp,name='verify_user_otp'),
+    path('reset_password',views.reset_password,name='reset_password')
 ]
 
