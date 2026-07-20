@@ -14,6 +14,17 @@ from django.contrib.auth.models import User
 
 from datetime import datetime, timedelta # Importing datetime and timedelta for handling time-related operations , such as setting OTP expiration time
 
+import random
+
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib import messages
+from django.shortcuts import render, redirect
+
+from django.contrib.auth.models import User
+
+from datetime import datetime, timedelta # Importing datetime and timedelta for handling time-related operations , such as setting OTP expiration time 
+
 def home(request):
     return HttpResponse("hello world")
 def master(request):
@@ -122,8 +133,12 @@ def addcourse(request):
         language=request.POST['language']
         price=request.POST['price']
         file=request.FILES['file']
+<<<<<<< HEAD
+        course1=course(coursetypes=coursetypes,name=name,duration=duration,language=language,price=price,file=file)
+=======
         Description=request.POST['Description']
         course1=course(coursetypes=coursetypes,name=name,duration=duration,language=language,price=price,file=file,Description=Description)
+>>>>>>> 661d7ac0f766727dedddc654a88d43c7c3c1fae9
         course1.save()
         messages.success(request,'added successfully')
         return redirect('/addcourse')
@@ -288,6 +303,27 @@ def user_login(request):
 #     return render(request,'courses.html',{'course':course1})        
 def course_details(request,id):
     course1=course.objects.get(id=id)
+<<<<<<< HEAD
+    return render(request,'course_details.html',{'course':course1})
+
+def course_assign(request,id):
+    course1=course.objects.all()
+    teacher1=teacher.objects.get(id=id)
+    course_assign1=courseassign.objects.all()
+    if(request.method=="POST"):
+        assigncourse=request.POST['assigncourse']
+        course_assign1=courseassign(course_assigned=assigncourse,teacherid=teacher1.id)
+        course_assign1.save()
+        messages.success(request,'assigned successfully')
+        return redirect('/addteachers')
+    else:
+        return render(request,'course_assign.html',{'teachere':teacher1,'courses':course1,'course_assign':course_assign1}) 
+def course_remove(request,id):
+    course_assign1=courseassign.objects.get(id=id)  # Get the course assignment object based on the provided id 
+    course_assign1.delete()  # Delete the course assignment object from the database
+    messages.success(request,'course removed successfully')  # Display a success message to the user
+    return redirect('/addteachers')           
+=======
     teacherdetails=assignedcourse.objects.filter(course_id=id)
     d={}
     for i in teacherdetails:
@@ -317,6 +353,7 @@ def course_remove(request,id):
     assignedcourse1.delete()  # Delete the course assignment object from the database
     messages.success(request,'course removed successfully')  # Display a success message to the user
     return redirect('/addteachers')
+>>>>>>> 661d7ac0f766727dedddc654a88d43c7c3c1fae9
 
 def forgot_password(request):
     if(request.method=="POST"):
@@ -335,7 +372,11 @@ def forgot_password(request):
                 f'Your OTP for EdunoVa password reset is: {otp}',
                 settings.EMAIL_HOST_USER, # Sender email address (configured in settings.py)
                 [email], # Recipient email address 
+<<<<<<< HEAD
+                fail_silently=False, # Raise an exception if email sending fails, allowing for error handling and debugging 
+=======
                 fail_silently=False,
+>>>>>>> 661d7ac0f766727dedddc654a88d43c7c3c1fae9
             )
 
             messages.success(request,'OTP sent to your email')
@@ -346,6 +387,19 @@ def forgot_password(request):
     else:
         return render(request,'forgot_password.html')    
 
+<<<<<<< HEAD
+def verify_user_otp(request):
+    expiry_time = request.session.get('otp_expiry') # Retrieve the OTP expiry time stored in the session during the forgot password process 
+    if request.method == "POST":
+        user_otp = request.POST.get('otp') # Get the OTP entered by the user from the form 
+        saved_otp = request.session.get('reset_otp') # Retrieve the OTP stored in the session during the forgot password process 
+        print("User OTP:", user_otp)  # Debugging: Print the OTP entered by the user
+        print("Saved OTP:", saved_otp)  # Debugging: Print the OTP stored
+
+       
+        expiry_time = datetime.strptime(expiry_time, '%Y-%m-%d %H:%M:%S') # Convert the expiry time string back to a datetime object for comparison 
+        if datetime.now() > expiry_time: # Check if the current time has exceeded the OTP expiry time 
+=======
 # def verify_user_otp(request):
 #     expiry_time = request.session.get('otp_expiry') # Retrieve the OTP expiry time stored in the session during the forgot password process 
 #     if request.method == "POST":
@@ -393,6 +447,7 @@ def verify_user_otp(request):
         saved_otp = request.session.get('reset_otp')
 
         if datetime.now() > expiry_datetime:
+>>>>>>> 661d7ac0f766727dedddc654a88d43c7c3c1fae9
             messages.error(request, "OTP expired")
             return redirect('forgot_password')
 
@@ -401,12 +456,17 @@ def verify_user_otp(request):
             return redirect('reset_password')
         else:
             messages.error(request, "Invalid OTP")
+<<<<<<< HEAD
+        return render(request, 'verify_user_otp.html',{'otp_expiry': expiry_time})
+    return render(request, 'verify_user_otp.html')    
+=======
 
     return render(
         request,
         'verify_user_otp.html',
         {'remaining_seconds': remaining_seconds}
     )
+>>>>>>> 661d7ac0f766727dedddc654a88d43c7c3c1fae9
 
 def reset_password(request):
 
@@ -450,4 +510,21 @@ def reset_password(request):
 
             messages.error(request, "Passwords do not match")
 
+<<<<<<< HEAD
+    return render(request, 'reset_password.html')    
+
+def before_payment(request,id):
+    course1=course.objects.get(id=id)
+    user=elearning_users.objects.all()
+    if request.session.has_key('email'):
+        eid=request.session['email']# Get the email of the logged-in user from the session 
+        user=elearning_users.objects.get(email=eid)# Retrieve the user object based on the email
+        
+    
+    else:  
+        return redirect('/user_login')  # Redirect to login page if user is not logged in      
+    
+    return render(request, 'before_payment.html',{'course': course1,'user': user})
+=======
     return render(request, 'reset_password.html')
+>>>>>>> 661d7ac0f766727dedddc654a88d43c7c3c1fae9

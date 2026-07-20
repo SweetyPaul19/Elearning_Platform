@@ -73,8 +73,8 @@
                 <a href="{% url 'contact' %}" class="nav-item nav-link">Contact</a>
             </div>
             {% if ename %}
-           <a href="" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block"> {{ename}}</a>
-            <a href="{% url 'user_login' %}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block"><i class="fa fa-solid fa-power-off"></i></a>
+           <a href="" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block"><i class="fa fa-user-circle me-2"></i></a>
+            <a href="{% url 'user_login' %}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block"><i class="fa fa-solid fa-power-off"></i><br/>log out</a>
            
             {% else %}
             <a href="{% url 'join_now' %}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Join Now<i class="fa fa-arrow-right ms-3"></i></a>
