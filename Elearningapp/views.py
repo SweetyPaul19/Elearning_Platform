@@ -4,6 +4,17 @@ from django.shortcuts import render,redirect
 from Elearningapp.models import *
 from django.contrib import messages
 
+import random
+
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib import messages
+from django.shortcuts import render, redirect
+
+from django.contrib.auth.models import User
+
+from datetime import datetime, timedelta # Importing datetime and timedelta for handling time-related operations , such as setting OTP expiration time 
+
 def home(request):
     return HttpResponse("hello world")
 def master(request):
@@ -294,3 +305,110 @@ def course_remove(request,id):
     course_assign1.delete()  # Delete the course assignment object from the database
     messages.success(request,'course removed successfully')  # Display a success message to the user
     return redirect('/addteachers')           
+
+def forgot_password(request):
+    if(request.method=="POST"):
+        email=request.POST['email']
+        usercheck=elearning_users.objects.filter(email=email)
+        if(usercheck):
+            otp = str(random.randint(100000, 999999))  # Generate a random 6-digit OTP
+            request.session['reset_otp'] = otp  # Store OTP in session for later verification 
+            request.session['reset_email'] = email  # Store email in session for later use in password reset process
+            
+            expiry_time = datetime.now() + timedelta(minutes=1)# Set OTP expiry time to 1 minute from now 
+            request.session['otp_expiry'] = expiry_time.strftime('%Y-%m-%d %H:%M:%S')
+            # Send OTP via email
+            send_mail( # Subject of the email, message body, sender's email address, recipient list, and fail_silently flag for error handling 
+                'Password Reset OTP',
+                f'Your OTP for EdunoVa password reset is: {otp}',
+                settings.EMAIL_HOST_USER, # Sender email address (configured in settings.py)
+                [email], # Recipient email address 
+                fail_silently=False, # Raise an exception if email sending fails, allowing for error handling and debugging 
+            )
+
+            messages.success(request,'OTP sent to your email')
+            return redirect('/verify_user_otp')
+        else:
+            messages.success(request,'email not found')
+            return redirect('/forgot_password')
+    else:
+        return render(request,'forgot_password.html')    
+
+def verify_user_otp(request):
+    expiry_time = request.session.get('otp_expiry') # Retrieve the OTP expiry time stored in the session during the forgot password process 
+    if request.method == "POST":
+        user_otp = request.POST.get('otp') # Get the OTP entered by the user from the form 
+        saved_otp = request.session.get('reset_otp') # Retrieve the OTP stored in the session during the forgot password process 
+        print("User OTP:", user_otp)  # Debugging: Print the OTP entered by the user
+        print("Saved OTP:", saved_otp)  # Debugging: Print the OTP stored
+
+       
+        expiry_time = datetime.strptime(expiry_time, '%Y-%m-%d %H:%M:%S') # Convert the expiry time string back to a datetime object for comparison 
+        if datetime.now() > expiry_time: # Check if the current time has exceeded the OTP expiry time 
+            messages.error(request, "OTP expired")
+            return redirect('forgot_password')
+
+        if user_otp == saved_otp:
+            messages.success(request, "OTP verified")
+            return redirect('reset_password')
+        else:
+            messages.error(request, "Invalid OTP")
+        return render(request, 'verify_user_otp.html',{'otp_expiry': expiry_time})
+    return render(request, 'verify_user_otp.html')    
+
+def reset_password(request):
+
+    if request.method == "POST":
+
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+
+        if new_password == confirm_password:
+
+            email = request.session.get('reset_email')
+
+            print("Session Email:", email)
+
+            if not email:
+
+                messages.error(request, "Session expired")
+
+                return redirect('forgot_password')
+
+            user = elearning_users.objects.filter(email=email).first()
+
+            print("User Object:", user)
+
+            if not user:
+
+                messages.error(request, "User not found")
+
+                return redirect('forgot_password')
+
+            user.password = new_password
+            user.save()
+
+            request.session.flush()
+
+            messages.success(request, "Password reset successfully")
+
+            return redirect('user_login')
+
+        else:
+
+            messages.error(request, "Passwords do not match")
+
+    return render(request, 'reset_password.html')    
+
+def before_payment(request,id):
+    course1=course.objects.get(id=id)
+    user=elearning_users.objects.all()
+    if request.session.has_key('email'):
+        eid=request.session['email']# Get the email of the logged-in user from the session 
+        user=elearning_users.objects.get(email=eid)# Retrieve the user object based on the email
+        
+    
+    else:  
+        return redirect('/user_login')  # Redirect to login page if user is not logged in      
+    
+    return render(request, 'before_payment.html',{'course': course1,'user': user})

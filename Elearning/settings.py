@@ -127,3 +127,13 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'  # URL prefix for media files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Django Email Configuration for sending emails using Gmail's SMTP server 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' # Use SMTP backend for sending emails 
+
+EMAIL_HOST = 'smtp.gmail.com' # Gmail's SMTP server address 
+EMAIL_PORT = 587 # Port number for TLS/STARTTLS encryption 
+EMAIL_USE_TLS = True # Enable TLS encryption for secure email transmission 
+
+EMAIL_HOST_USER = 'srakshit923@gmail.com' # sender's Gmail email address 
+EMAIL_HOST_PASSWORD = 'fitg vfhf tkqy aush' # App password generated for the email account 
