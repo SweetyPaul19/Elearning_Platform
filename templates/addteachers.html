@@ -69,7 +69,11 @@
                           <th> photo</th>
                             <th> Edit</th>
                           <th>Delete</th>
+<<<<<<< HEAD
                           <th>assign course</th>
+=======
+                          <th>Assigned Course</th>
+>>>>>>> 661d7ac0f766727dedddc654a88d43c7c3c1fae9
                         </tr>
                       </thead>
                         {% for i in course %}
@@ -81,7 +85,12 @@
                                 <td><img src="media/{{i.file}}" alt="" width="100px" height="100px"></td>
                                 <td><a href="addteachers_edit/{{i.id}}">edit</a></td>
                                 <td><a href="addteachers_delete/{{i.id}}">Delete</a></td>
+<<<<<<< HEAD
                                 <td><a href="course_assign/{{i.id}}">Assign</a></td>
+=======
+                                <td><a href="assigncourse/{{i.id}}">Assigned Course</a></td>
+                                
+>>>>>>> 661d7ac0f766727dedddc654a88d43c7c3c1fae9
                             </tr>
                         {% endfor %}
                       
