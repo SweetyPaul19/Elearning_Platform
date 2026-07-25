@@ -5,7 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Verify OTP</title>
+    <title>account creation otp</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="{% static 'assets/vendors/mdi/css/materialdesignicons.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets/vendors/ti-icons/css/themify-icons.css'%}">
@@ -39,9 +39,9 @@
                 <h4>Verify OTP</h4>
                 <h6 class="font-weight-light">Enter the OTP sent to your email.</h6>
                 <div>
-                  <h4>OTP expaires in:</h4><h4 id="timer" style="color:red"></h4>
+                  <h4>OTP expaires in :{{ expiry }}</h4><h4 id="timer" style="color:red"></h4>
                 </div>
-                <form action="/verify_user_otp" method="POST" class="pt-3">
+                <form action="/joining_otp_verification" method="POST" class="pt-3">
                   {% csrf_token %}
                   <div class="form-group">
                     <label for="reset_otp">Enter OTP:</label>
