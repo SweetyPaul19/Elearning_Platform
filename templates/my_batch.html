@@ -1,0 +1,1064 @@
+{% extends 'master.html' %}
+{% load static %}
+
+{% block title %}
+Student Dashboard
+{% endblock %}
+
+{% block contain %}
+
+<div class="main-panel">
+    <div class="content-wrapper">
+
+        <!-- Dashboard Header -->
+        <div class="page-header">
+            <h3 class="page-title">
+                <span class="page-title-icon bg-gradient-primary text-white me-2">
+                    <i class="mdi mdi-school"></i>
+                </span>
+                Welcome, {{ ename }}
+            </h3>
+
+            <nav aria-label="breadcrumb">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item active">
+                        Student Dashboard
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Top Cards -->
+
+        <div class="row">
+
+            <!-- Enrolled Courses -->
+
+            <div class="col-md-3 stretch-card grid-margin">
+
+                <div class="card bg-gradient-primary card-img-holder text-white">
+
+                    <div class="card-body">
+
+                        <i class="mdi mdi-book-open-page-variant mdi-48px float-end"></i>
+
+                        <h4 class="font-weight-normal mb-3">
+
+                            My Courses
+
+                        </h4>
+
+                        <h2 class="mb-3">
+
+                            {{ total_courses }}
+
+                        </h2>
+
+                        <h6>
+
+                            Purchased Courses
+
+                        </h6>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Progress -->
+
+            <div class="col-md-3 stretch-card grid-margin">
+
+                <div class="card bg-gradient-success card-img-holder text-white">
+
+                    <div class="card-body">
+
+                        <i class="mdi mdi-chart-line mdi-48px float-end"></i>
+
+                        <h4 class="font-weight-normal mb-3">
+
+                            Progress
+
+                        </h4>
+
+                        <h2 class="mb-3">
+
+                            {{ progress }}%
+
+                        </h2>
+
+                        <h6>
+
+                            Course Completion
+
+                        </h6>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Assignments -->
+
+            <div class="col-md-3 stretch-card grid-margin">
+
+                <div class="card bg-gradient-warning card-img-holder text-white">
+
+                    <div class="card-body">
+
+                        <i class="mdi mdi-file-document mdi-48px float-end"></i>
+
+                        <h4 class="font-weight-normal mb-3">
+
+                            Assignments
+
+                        </h4>
+
+                        <h2 class="mb-3">
+
+                            {{ pending_assignments }}
+
+                        </h2>
+
+                        <h6>
+
+                            Pending Submission
+
+                        </h6>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Certificates -->
+
+            <div class="col-md-3 stretch-card grid-margin">
+
+                <div class="card bg-gradient-danger card-img-holder text-white">
+
+                    <div class="card-body">
+
+                        <i class="mdi mdi-certificate mdi-48px float-end"></i>
+
+                        <h4 class="font-weight-normal mb-3">
+
+                            Certificates
+
+                        </h4>
+
+                        <h2 class="mb-3">
+
+                            {{ certificates }}
+
+                        </h2>
+
+                        <h6>
+
+                            Earned
+
+                        </h6>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Continue Learning -->
+
+        <div class="row">
+
+            <div class="col-lg-8 grid-margin stretch-card">
+
+                <div class="card">
+
+                    <div class="card-body">
+
+                        <h4 class="card-title">
+
+                            Continue Learning
+
+                        </h4>
+
+                        <p class="text-muted">
+
+                            Continue your enrolled courses from where you left.
+
+                        </p>
+
+                        <div class="table-responsive">
+
+                            <table class="table table-hover">
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>Course</th>
+
+                                        <th>Instructor</th>
+
+                                        <th>Progress</th>
+
+                                        <th>Action</th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                {% for course in courses %}
+
+                                    <tr>
+
+                                        <td>{{ course.course_name }}</td>
+
+                                        <td>{{ course.instructor }}</td>
+
+                                        <td>
+
+                                            <div class="progress">
+
+                                                <div class="progress-bar bg-success"
+
+                                                     style="width:{{ course.progress }}%;">
+
+                                                    {{ course.progress }}%
+
+                                                </div>
+
+                                            </div>
+
+                                        </td>
+
+                                        <td>
+
+                                            <a href="{% url 'course_details' course.id %}"
+
+                                               class="btn btn-gradient-primary btn-sm">
+
+                                                Continue
+
+                                            </a>
+
+                                        </td>
+
+                                    </tr>
+
+                                {% empty %}
+
+                                    <tr>
+
+                                        <td colspan="4" class="text-center">
+
+                                            No Course Purchased Yet.
+
+                                        </td>
+
+                                    </tr>
+
+                                {% endfor %}
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+                        <!-- Quick Access -->
+
+            <div class="col-lg-4 grid-margin stretch-card">
+
+                <div class="card">
+
+                    <div class="card-body">
+
+                        <h4 class="card-title">
+
+                            Quick Access
+
+                        </h4>
+
+                        <div class="row">
+
+                            <div class="col-6 mb-3">
+
+                                <a href="{% url 'video_list' %}" class="text-decoration-none">
+
+                                    <div class="card border-primary">
+
+                                        <div class="card-body text-center">
+
+                                            <i class="mdi mdi-play-circle mdi-48px text-primary"></i>
+
+                                            <h6 class="mt-3">
+
+                                                Videos
+
+                                            </h6>
+
+                                        </div>
+
+                                    </div>
+
+                                </a>
+
+                            </div>
+
+                            <div class="col-6 mb-3">
+
+                                <a href="#" class="text-decoration-none">
+
+                                    <div class="card border-success">
+
+                                        <div class="card-body text-center">
+
+                                            <i class="mdi mdi-book-open-page-variant mdi-48px text-success"></i>
+
+                                            <h6 class="mt-3">
+
+                                                Notes
+
+                                            </h6>
+
+                                        </div>
+
+                                    </div>
+
+                                </a>
+
+                            </div>
+
+                            <div class="col-6 mb-3">
+
+                                <a href="#" class="text-decoration-none">
+
+                                    <div class="card border-warning">
+
+                                        <div class="card-body text-center">
+
+                                            <i class="mdi mdi-folder-download mdi-48px text-warning"></i>
+
+                                            <h6 class="mt-3">
+
+                                                Study Material
+
+                                            </h6>
+
+                                        </div>
+
+                                    </div>
+
+                                </a>
+
+                            </div>
+
+                            <div class="col-6 mb-3">
+
+                                <a href="#" class="text-decoration-none">
+
+                                    <div class="card border-danger">
+
+                                        <div class="card-body text-center">
+
+                                            <i class="mdi mdi-file-document mdi-48px text-danger"></i>
+
+                                            <h6 class="mt-3">
+
+                                                Assignment
+
+                                            </h6>
+
+                                        </div>
+
+                                    </div>
+
+                                </a>
+
+                            </div>
+
+                            <div class="col-6 mb-3">
+
+                                <a href="#" class="text-decoration-none">
+
+                                    <div class="card border-info">
+
+                                        <div class="card-body text-center">
+
+                                            <i class="mdi mdi-certificate mdi-48px text-info"></i>
+
+                                            <h6 class="mt-3">
+
+                                                Certificates
+
+                                            </h6>
+
+                                        </div>
+
+                                    </div>
+
+                                </a>
+
+                            </div>
+
+                            <div class="col-6 mb-3">
+
+                                <a href="{% url 'profile' %}" class="text-decoration-none">
+
+                                    <div class="card border-dark">
+
+                                        <div class="card-body text-center">
+
+                                            <i class="mdi mdi-account-circle mdi-48px text-dark"></i>
+
+                                            <h6 class="mt-3">
+
+                                                My Profile
+
+                                            </h6>
+
+                                        </div>
+
+                                    </div>
+
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Recent Videos -->
+
+        <div class="row">
+
+            <div class="col-lg-6 grid-margin stretch-card">
+
+                <div class="card">
+
+                    <div class="card-body">
+
+                        <h4 class="card-title">
+
+                            Latest Video Lectures
+
+                        </h4>
+
+                        <div class="table-responsive">
+
+                            <table class="table table-hover">
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>Title</th>
+
+                                        <th>Duration</th>
+
+                                        <th>Watch</th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                {% for video in videos %}
+
+                                    <tr>
+
+                                        <td>{{ video.title }}</td>
+
+                                        <td>{{ video.duration }}</td>
+
+                                        <td>
+
+                                            <a href="#"
+
+                                               target="_blank"
+
+                                               class="btn btn-gradient-primary btn-sm">
+
+                                                Watch
+
+                                            </a>
+
+                                        </td>
+
+                                    </tr>
+
+                                {% empty %}
+
+                                    <tr>
+
+                                        <td colspan="3">
+
+                                            No videos available.
+
+                                        </td>
+
+                                    </tr>
+
+                                {% endfor %}
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+                        <!-- Study Materials -->
+
+            <div class="col-lg-6 grid-margin stretch-card">
+
+                <div class="card">
+
+                    <div class="card-body">
+
+                        <h4 class="card-title">
+
+                            Study Materials
+
+                        </h4>
+
+                        <div class="table-responsive">
+
+                            <table class="table table-hover">
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>Material</th>
+
+                                        <th>Type</th>
+
+                                        <th>Download</th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                {% for material in materials %}
+
+                                    <tr>
+
+                                        <td>{{ material.title }}</td>
+
+                                        <td>
+
+                                            <span class="badge badge-gradient-info">
+
+                                                {{ material.file_type }}
+
+                                            </span>
+
+                                        </td>
+
+                                        <td>
+
+                                            <a href="{{ material.file.url }}"
+
+                                               class="btn btn-gradient-success btn-sm"
+
+                                               download>
+
+                                                <i class="mdi mdi-download"></i>
+
+                                                Download
+
+                                            </a>
+
+                                        </td>
+
+                                    </tr>
+
+                                {% empty %}
+
+                                    <tr>
+
+                                        <td colspan="3" class="text-center">
+
+                                            No study material uploaded.
+
+                                        </td>
+
+                                    </tr>
+
+                                {% endfor %}
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+
+
+        <!-- Notes & Assignments -->
+
+        <div class="row">
+
+            <!-- Notes -->
+
+            <div class="col-lg-6 grid-margin stretch-card">
+
+                <div class="card">
+
+                    <div class="card-body">
+
+                        <h4 class="card-title">
+
+                            Course Notes
+
+                        </h4>
+
+                        <div class="table-responsive">
+
+                            <table class="table table-hover">
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>Topic</th>
+
+                                        <th>Date</th>
+
+                                        <th>Download</th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                {% for note in notes %}
+
+                                    <tr>
+
+                                        <td>{{ note.title }}</td>
+
+                                        <td>{{ note.date }}</td>
+
+                                        <td>
+
+                                            <a href="{{ note.file.url }}"
+
+                                               class="btn btn-gradient-primary btn-sm"
+
+                                               download>
+
+                                                <i class="mdi mdi-file-pdf"></i>
+
+                                                PDF
+
+                                            </a>
+
+                                        </td>
+
+                                    </tr>
+
+                                {% empty %}
+
+                                    <tr>
+
+                                        <td colspan="3" class="text-center">
+
+                                            Notes not available.
+
+                                        </td>
+
+                                    </tr>
+
+                                {% endfor %}
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+
+
+            <!-- Assignments -->
+
+            <div class="col-lg-6 grid-margin stretch-card">
+
+                <div class="card">
+
+                    <div class="card-body">
+
+                        <h4 class="card-title">
+
+                            Assignments
+
+                        </h4>
+
+                        <div class="table-responsive">
+
+                            <table class="table table-hover">
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>Assignment</th>
+
+                                        <th>Last Date</th>
+
+                                        <th>Status</th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                {% for assignment in assignments %}
+
+                                    <tr>
+
+                                        <td>{{ assignment.title }}</td>
+
+                                        <td>{{ assignment.last_date }}</td>
+
+                                        <td>
+
+                                            {% if assignment.completed %}
+
+                                            <span class="badge badge-gradient-success">
+
+                                                Submitted
+
+                                            </span>
+
+                                            {% else %}
+
+                                            <span class="badge badge-gradient-danger">
+
+                                                Pending
+
+                                            </span>
+
+                                            {% endif %}
+
+                                        </td>
+
+                                    </tr>
+
+                                {% empty %}
+
+                                    <tr>
+
+                                        <td colspan="3" class="text-center">
+
+                                            No assignments available.
+
+                                        </td>
+
+                                    </tr>
+
+                                {% endfor %}
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+                <!-- Announcements & Upcoming Classes -->
+
+        <div class="row">
+
+            <!-- Latest Announcements -->
+
+            <div class="col-lg-6 grid-margin stretch-card">
+
+                <div class="card">
+
+                    <div class="card-body">
+
+                        <h4 class="card-title">
+                            Latest Announcements
+                        </h4>
+
+                        <ul class="list-group">
+
+                            {% for notice in notices %}
+
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+
+                                <div>
+
+                                    <h6 class="mb-1">
+                                        {{ notice.title }}
+                                    </h6>
+
+                                    <small class="text-muted">
+                                        {{ notice.description }}
+                                    </small>
+
+                                </div>
+
+                                <span class="badge badge-gradient-primary">
+                                    {{ notice.date }}
+                                </span>
+
+                            </li>
+
+                            {% empty %}
+
+                            <li class="list-group-item text-center">
+
+                                No announcements available.
+
+                            </li>
+
+                            {% endfor %}
+
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+
+
+            <!-- Upcoming Live Classes -->
+
+            <div class="col-lg-6 grid-margin stretch-card">
+
+                <div class="card">
+
+                    <div class="card-body">
+
+                        <h4 class="card-title">
+
+                            Upcoming Live Classes
+
+                        </h4>
+
+                        <table class="table table-hover">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Class</th>
+
+                                    <th>Date</th>
+
+                                    <th>Join</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                            {% for live in live_classes %}
+
+                                <tr>
+
+                                    <td>{{ live.title }}</td>
+
+                                    <td>{{ live.date }}</td>
+
+                                    <td>
+
+                                        <a href="#"
+
+                                           target="_blank"
+
+                                           class="btn btn-gradient-info btn-sm">
+
+                                            Join
+
+                                        </a>
+
+                                    </td>
+
+                                </tr>
+
+                            {% empty %}
+
+                                <tr>
+
+                                    <td colspan="3" class="text-center">
+
+                                        No Live Classes Scheduled.
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+
+
+        <!-- Learning Progress -->
+
+        <div class="row">
+
+            <div class="col-lg-12 grid-margin stretch-card">
+
+                <div class="card">
+
+                    <div class="card-body">
+
+                        <h4 class="card-title">
+
+                            Learning Progress
+
+                        </h4>
+
+                        {% for course in courses %}
+
+                        <div class="mb-4">
+
+                            <div class="d-flex justify-content-between">
+
+                                <strong>{{ course.course_name }}</strong>
+
+                                <span>{{ course.progress }}%</span>
+
+                            </div>
+
+                            <div class="progress mt-2">
+
+                                <div class="progress-bar bg-gradient-success"
+
+                                     style="width:{{ course.progress }}%">
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        {% empty %}
+
+                        <p class="text-center">
+
+                            Purchase a course to start learning.
+
+                        </p>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Footer Message -->
+
+        <div class="row">
+
+            <div class="col-md-12">
+
+                <div class="card">
+
+                    <div class="card-body text-center">
+
+                        <h5 class="text-primary">
+
+                            🎓 Keep Learning. Keep Growing.
+
+                        </h5>
+
+                        <p class="text-muted mb-0">
+
+                            Complete your lessons regularly to unlock certificates and improve your skills.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

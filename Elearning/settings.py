@@ -136,8 +136,4 @@ EMAIL_PORT = 587 # Port number for TLS/STARTTLS encryption
 EMAIL_USE_TLS = True # Enable TLS encryption for secure email transmission 
 
 EMAIL_HOST_USER = 'srakshit923@gmail.com' # sender's Gmail email address 
-<<<<<<< HEAD
 EMAIL_HOST_PASSWORD = 'fitg vfhf tkqy aush' # App password generated for the email account 
-=======
-EMAIL_HOST_PASSWORD = 'fitg vfhf tkqy aush' # App password generated for the email account
->>>>>>> 661d7ac0f766727dedddc654a88d43c7c3c1fae9

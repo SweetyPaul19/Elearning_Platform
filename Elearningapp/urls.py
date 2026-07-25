@@ -27,22 +27,17 @@ urlpatterns=[
     path('about',views.about,name='about'),
     path('contact',views.contact,name='contact'),
     path('join_now',views.join_now,name='join_now'),
+    path('joining_otp_verification',views.joining_otp_verification,name='joining_otp_verification'),
     path('user_login',views.user_login,name='user_login'),
+    path('user_logout',views.user_logout,name='user_logout'),
     path('course_details/<int:id>',views.course_details,name='course_details'),
-<<<<<<< HEAD
     path('course_assign/<int:id>',views.course_assign,name='course_assign'),
     path('course_remove/<int:id>',views.course_remove,name='course_remove'),
 
     path('forgot_password',views.forgot_password,name='forgot_password'),
     path('verify_user_otp',views.verify_user_otp,name='verify_user_otp'),
     path('reset_password',views.reset_password,name='reset_password'),
-    path('before_payment/<int:id>',views.before_payment,name='before_payment')
-=======
-    path('assigncourse/<int:id>',views.assigncourse,name='assigncourse'),
-    path('course_remove/<int:id>',views.course_remove,name='course_remove'),
-    path('forgot_password',views.forgot_password,name='forgot_password'),
-    path('verify_user_otp',views.verify_user_otp,name='verify_user_otp'),
-    path('reset_password',views.reset_password,name='reset_password')
->>>>>>> 661d7ac0f766727dedddc654a88d43c7c3c1fae9
+    path('before_payment/<int:id>',views.before_payment,name='before_payment'),
+    path('my_batch',views.my_batch,name='my_batch')
 ]
 
