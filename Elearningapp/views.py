@@ -14,6 +14,17 @@ from django.contrib.auth.models import User
 
 from datetime import datetime, timedelta # Importing datetime and timedelta for handling time-related operations , such as setting OTP expiration time
 
+import random
+
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib import messages
+from django.shortcuts import render, redirect
+
+from django.contrib.auth.models import User
+
+from datetime import datetime, timedelta # Importing datetime and timedelta for handling time-related operations , such as setting OTP expiration time 
+
 def home(request):
     return HttpResponse("hello world")
 def master(request):
@@ -122,8 +133,7 @@ def addcourse(request):
         language=request.POST['language']
         price=request.POST['price']
         file=request.FILES['file']
-        Description=request.POST['Description']
-        course1=course(coursetypes=coursetypes,name=name,duration=duration,language=language,price=price,file=file,Description=Description)
+        course1=course(coursetypes=coursetypes,name=name,duration=duration,language=language,price=price,file=file)
         course1.save()
         messages.success(request,'added successfully')
         return redirect('/addcourse')
@@ -222,7 +232,7 @@ def website_index(request):
         eid=request.session['email']# Get the email of the logged-in user from the session 
         user=elearning_users.objects.get(email=eid)# Retrieve the user object based on the email
         ename=user.name # Get the name of the logged-in user from the user object 
-           #loging out process
+        
     admin=headlines.objects.all()
     Coursetype=coursetype.objects.all()
     course1=course.objects.all()
@@ -250,7 +260,13 @@ def about(request):
     return render(request,'about.html')     
 
 def contact(request):    
-    return render(request,'contact.html')
+    ename=None
+    if request.session.has_key('email'):# Check if user is logged in
+        eid=request.session['email']# Get the email of the logged-in user from the session 
+        user=elearning_users.objects.get(email=eid)# Retrieve the user object based on the email
+        ename=user.name # Get the name of the logged-in user from the user object 
+        
+    return render(request,'contact.html',{'ename':ename})
 
 def join_now(request):
     if(request.method=='POST'):
@@ -259,12 +275,76 @@ def join_now(request):
         phone=request.POST['phone']
         password=request.POST['password']
         school_college=request.POST['school_college']
-        user=elearning_users(name=name,email=email,phone=phone,password=password,school_college=school_college)
-        user.save()
-        messages.success(request,'registration successfully')
-        return redirect('/join_now')
-    else:
-        return render(request,'join_now.html')    
+        # Check if email already exists
+        if elearning_users.objects.filter(email=email).exists():
+            messages.error(request, "Email already registered.")
+            return redirect("join_now")
+
+        otp = str(random.randint(100000, 999999))
+
+        # Store registration details in session
+        request.session['reg_name'] = name
+        request.session['reg_email'] = email
+        request.session['reg_phone'] = phone
+        request.session['reg_password'] = password
+        request.session['reg_school'] = school_college
+
+        request.session['register_otp'] = otp
+
+        expiry = datetime.now() + timedelta(minutes=2)
+        request.session['register_otp_expiry'] = expiry.strftime('%Y-%m-%d %H:%M:%S')# Store the OTP expiry time in session for later verification 
+
+        send_mail(
+            "Email Verification OTP",
+            f"Welcome to EdunoVa.Verifying email for creating account.\n\nYour OTP is: {otp}\n\nIt is valid for 2 minutes.",
+            settings.EMAIL_HOST_USER,
+            [email],
+            fail_silently=False, 
+        )
+
+        messages.success(request, "OTP sent to your email.")
+        return redirect("joining_otp_verification")
+    
+    return render(request,'join_now.html')    
+
+def joining_otp_verification(request):
+    expiry = request.session.get("register_otp_expiry")
+    if request.method == "POST":
+        user_otp = request.POST.get("otp")
+        saved_otp = request.session.get("register_otp")
+        expiry = datetime.strptime(expiry, "%Y-%m-%d %H:%M:%S")#
+        if datetime.now() > expiry:
+            messages.error(request, "OTP expired. Please register again.")
+            request.session.flush()  # Clear session data
+            return redirect("join_now")
+        if user_otp == saved_otp:
+            # Retrieve registration details from session
+            name = request.session.get("reg_name")
+            email = request.session.get("reg_email")
+            phone = request.session.get("reg_phone")
+            password = request.session.get("reg_password")
+            school_college = request.session.get("reg_school")
+
+            # Create a new user in the database
+            new_user = elearning_users(
+                name=name,
+                email=email,
+                phone=phone,
+                password=password,
+                school_college=school_college,
+            )
+            new_user.save()
+
+            # Clear session data after successful registration
+            request.session.flush()
+
+            messages.success(request, "Registration successful. You can now log in.")
+            return redirect("join_now") 
+        else:
+            messages.error(request, "Invalid OTP. Please try again.")
+            request.session.flush()  # Clear session data
+            return redirect("join_now")
+    return render(request, "joining_otp_verification.html", {"expiry": expiry})        
 
 def user_login(request): 
     if request.session.has_key('email'):
@@ -283,40 +363,36 @@ def user_login(request):
     else:
         return render(request,'user_login.html')
 
+def user_logout(request):
+    if request.session.has_key('email'):
+        del request.session['email']  #loging out process
+    messages.success(request,'logout successfully')
+    return redirect('/')
+
 # def courses(request):
 #     course1=course.objects.all()
 #     return render(request,'courses.html',{'course':course1})        
 def course_details(request,id):
     course1=course.objects.get(id=id)
-    teacherdetails=assignedcourse.objects.filter(course_id=id)
-    d={}
-    for i in teacherdetails:
-        teacherid=i.teacher_id
-        teacherdata=teacher.objects.get(id=teacherid)
-        d[i.teacher_id]={'tname':i.teacher_name,'timage':teacherdata.file}
-    return render(request,'course_details.html',{'course':course1,'teacher':d})
- 
+    return render(request,'course_details.html',{'course':course1})
 
-
-def assigncourse(request,id):
+def course_assign(request,id):
     course1=course.objects.all()
     teacher1=teacher.objects.get(id=id)
-    assignedcourse1=assignedcourse.objects.all()
+    course_assign1=courseassign.objects.all()
     if(request.method=="POST"):
-        course2data=request.POST['course']
-        course2data=course.objects.get(id=course2data)
-        assignedcourse1=assignedcourse(course_id=course2data.id,teacher_id=teacher1.id,course_name=course2data.name,teacher_name=teacher1.name )
-        assignedcourse1.save()
+        assigncourse=request.POST['assigncourse']
+        course_assign1=courseassign(course_assigned=assigncourse,teacherid=teacher1.id)
+        course_assign1.save()
         messages.success(request,'assigned successfully')
-        return redirect('/assigncourse')
+        return redirect('/addteachers')
     else:
-        return render(request,'assigncourse.html',{'teacher':teacher1,'courses':course1,'assignedcourse':assignedcourse1})
-
+        return render(request,'course_assign.html',{'teachere':teacher1,'courses':course1,'course_assign':course_assign1}) 
 def course_remove(request,id):
-    assignedcourse1=assignedcourse.objects.get(id=id)  # Get the course assignment object based on the provided id 
-    assignedcourse1.delete()  # Delete the course assignment object from the database
+    course_assign1=courseassign.objects.get(id=id)  # Get the course assignment object based on the provided id 
+    course_assign1.delete()  # Delete the course assignment object from the database
     messages.success(request,'course removed successfully')  # Display a success message to the user
-    return redirect('/addteachers')
+    return redirect('/addteachers')           
 
 def forgot_password(request):
     if(request.method=="POST"):
@@ -335,7 +411,7 @@ def forgot_password(request):
                 f'Your OTP for EdunoVa password reset is: {otp}',
                 settings.EMAIL_HOST_USER, # Sender email address (configured in settings.py)
                 [email], # Recipient email address 
-                fail_silently=False,
+                fail_silently=False, # Raise an exception if email sending fails, allowing for error handling and debugging 
             )
 
             messages.success(request,'OTP sent to your email')
@@ -346,53 +422,17 @@ def forgot_password(request):
     else:
         return render(request,'forgot_password.html')    
 
-# def verify_user_otp(request):
-#     expiry_time = request.session.get('otp_expiry') # Retrieve the OTP expiry time stored in the session during the forgot password process 
-#     if request.method == "POST":
-#         user_otp = request.POST.get('otp') # Get the OTP entered by the user from the form 
-#         saved_otp = request.session.get('reset_otp') # Retrieve the OTP stored in the session during the forgot password process 
-#         print("User OTP:", user_otp)  # Debugging: Print the OTP entered by the user
-#         print("Saved OTP:", saved_otp)  # Debugging: Print the OTP stored
+def verify_user_otp(request):
+    expiry_time = request.session.get('otp_expiry') # Retrieve the OTP expiry time stored in the session during the forgot password process 
+    if request.method == "POST":
+        user_otp = request.POST.get('otp') # Get the OTP entered by the user from the form 
+        saved_otp = request.session.get('reset_otp') # Retrieve the OTP stored in the session during the forgot password process 
+        print("User OTP:", user_otp)  # Debugging: Print the OTP entered by the user
+        print("Saved OTP:", saved_otp)  # Debugging: Print the OTP stored
 
        
-#         expiry_time = datetime.strptime(expiry_time, '%Y-%m-%d %H:%M:%S') # Convert the expiry time string back to a datetime object for comparison 
-#         if datetime.now() > expiry_time: # Check if the current time has exceeded the OTP expiry time 
-#             messages.error(request, "OTP expired")
-#             return redirect('forgot_password')
-
-#         if user_otp == saved_otp:
-#             messages.success(request, "OTP verified")
-#             return redirect('reset_password')
-#         else:
-#             messages.error(request, "Invalid OTP")
-#         return render(request, 'verify_user_otp.html',{'otp_expiry': expiry_time})
-#     return render(request, 'verify_user_otp.html')    
-
-from datetime import datetime
-
-def verify_user_otp(request):
-    expiry_time = request.session.get('otp_expiry')
-
-    remaining_seconds = 0
-
-    if expiry_time:
-        expiry_datetime = datetime.strptime(
-            expiry_time,
-            '%Y-%m-%d %H:%M:%S'
-        )
-
-        remaining_seconds = int(
-            (expiry_datetime - datetime.now()).total_seconds()
-        )
-
-        if remaining_seconds < 0:
-            remaining_seconds = 0
-
-    if request.method == "POST":
-        user_otp = request.POST.get('otp')
-        saved_otp = request.session.get('reset_otp')
-
-        if datetime.now() > expiry_datetime:
+        expiry_time = datetime.strptime(expiry_time, '%Y-%m-%d %H:%M:%S') # Convert the expiry time string back to a datetime object for comparison 
+        if datetime.now() > expiry_time: # Check if the current time has exceeded the OTP expiry time 
             messages.error(request, "OTP expired")
             return redirect('forgot_password')
 
@@ -401,12 +441,8 @@ def verify_user_otp(request):
             return redirect('reset_password')
         else:
             messages.error(request, "Invalid OTP")
-
-    return render(
-        request,
-        'verify_user_otp.html',
-        {'remaining_seconds': remaining_seconds}
-    )
+        return render(request, 'verify_user_otp.html',{'otp_expiry': expiry_time})
+    return render(request, 'verify_user_otp.html')    
 
 def reset_password(request):
 
@@ -450,4 +486,26 @@ def reset_password(request):
 
             messages.error(request, "Passwords do not match")
 
-    return render(request, 'reset_password.html')
+    return render(request, 'reset_password.html')    
+
+def before_payment(request,id):
+    course1=course.objects.get(id=id)
+    user=elearning_users.objects.all()
+    if request.session.has_key('email'):
+        eid=request.session['email']# Get the email of the logged-in user from the session 
+        user=elearning_users.objects.get(email=eid)# Retrieve the user object based on the email
+        
+    
+    else:  
+        return redirect('/user_login')  # Redirect to login page if user is not logged in      
+    
+    return render(request, 'before_payment.html',{'course': course1,'user': user})
+def my_batch(request):
+    if request.session.has_key('email'):
+        eid=request.session['email']# Get the email of the logged-in user from the session 
+        user=elearning_users.objects.get(email=eid)# Retrieve the user object based on the email
+        ename=user.name # Get the name of the logged-in user from the user object 
+        return render(request, 'my_batch.html', {'ename':ename})
+    else:
+        messages.success(request,'please login!')
+        return redirect('/user_login')

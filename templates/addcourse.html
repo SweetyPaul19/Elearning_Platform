@@ -53,6 +53,10 @@
                       </div>
                       <div class="form-group">
                         <label for="exampleInputName1">Language</label>
+<<<<<<< HEAD
+                        <input type="text" class="form-control" id="exampleInputName1" name="language" placeholder="Language">
+                      </div>
+=======
                         <input type="text" class="form-control" id="exampleInputName1" name="language" placeholder="language">
                       </div>
                       <div class="form-group">
@@ -63,6 +67,7 @@
 
               
                     
+>>>>>>> 661d7ac0f766727dedddc654a88d43c7c3c1fae9
                       <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
                       
                     </form>
@@ -82,6 +87,8 @@
                           
                           <th>logo</th>
                           <th> Courses </th>
+                          <th>Duration</th>
+                          <th>Language</th>
                           <th>Price</th>
                           <th> Edit</th>
                           <th>Delete</th>
@@ -91,6 +98,8 @@
                           <tr>
                                 <td><img src="media/{{i.file}}" alt="" width="100px" height="100px"></td>
                                 <td>{{i.name}}</td>
+                                <td>{{i.duration}}</td>
+                                <td>{{i.language}}</td>
                                 <td>{{i.price}}</td>
                                 <td><a href="addcourse_edit/{{i.id}}">edit</a></td>
                                 <td><a href="addcourse_delete/{{i.id}}">Delete</a></td>
