@@ -257,7 +257,12 @@ def addheadlines_delete(request,id):
     return redirect('/addheadlines')        
 
 def about(request):
-    return render(request,'about.html')     
+    ename=None
+    if request.session.has_key('email'):# Check if user is logged in
+        eid=request.session['email']# Get the email of the logged-in user from the session 
+        user=elearning_users.objects.get(email=eid)# Retrieve the user object based on the email
+        ename=user.name # Get the name of the logged-in user from the user object 
+    return render(request,'about.html',{'ename':ename})     
 
 def contact(request):    
     ename=None
@@ -509,3 +514,4 @@ def my_batch(request):
     else:
         messages.success(request,'please login!')
         return redirect('/user_login')
+    
