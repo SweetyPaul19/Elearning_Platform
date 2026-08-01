@@ -39,5 +39,5 @@ urlpatterns=[
     path('reset_password',views.reset_password,name='reset_password'),
     path('before_payment/<int:id>',views.before_payment,name='before_payment'),
     path('my_batch',views.my_batch,name='my_batch')
-]
+    ]
 
