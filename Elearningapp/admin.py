@@ -7,4 +7,5 @@ admin.site.register(teacher)
 admin.site.register(headlines)
 admin.site.register(elearning_users)
 admin.site.register(courseassign)
+admin.site.register(my_batch)
 # Register your models here.

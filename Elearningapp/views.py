@@ -505,7 +505,7 @@ def before_payment(request,id):
         return redirect('/user_login')  # Redirect to login page if user is not logged in      
     
     return render(request, 'before_payment.html',{'course': course1,'user': user})
-def my_batch(request):
+def user_dashboard(request):
     if request.session.has_key('email'):
         eid=request.session['email']# Get the email of the logged-in user from the session 
         user=elearning_users.objects.get(email=eid)# Retrieve the user object based on the email

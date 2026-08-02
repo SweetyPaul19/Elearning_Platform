@@ -60,3 +60,12 @@ class courseassign(models.Model):
     teacherid=models.CharField(max_length=50,default='')  
     def _str_(self):
         return self.course_assigned      
+
+class my_batch(models.Model):
+    course_id=models.CharField(max_length=50,default=" ")
+    course_name=models.CharField(max_length=50,default=" ")
+    user_name=models.CharField(max_length=50,default=" ")
+    course_date=models.DateField(max_length=50,default=" ")
+    expiry_date=models.DateField(max_length=50,default=" ")
+    def _str_(self):
+            return self.user_name   

@@ -38,6 +38,6 @@ urlpatterns=[
     path('verify_user_otp',views.verify_user_otp,name='verify_user_otp'),
     path('reset_password',views.reset_password,name='reset_password'),
     path('before_payment/<int:id>',views.before_payment,name='before_payment'),
-    path('my_batch',views.my_batch,name='my_batch')
+    path('user_dashboard',views.user_dashboard,name='user_dashboard')
     ]
 
