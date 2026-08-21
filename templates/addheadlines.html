@@ -1,29 +1,15 @@
-{% extends 'master.html' %}
+{% extends 'admin_master.html' %}
 {% load static %}
-{% block title %}
-
-    AdminKit Demo - Bootstrap 5 Admin Template
-
-{% endblock %}
-
-{% block contain %}
+{% block content %}
 <div class="main-panel">
           <div class="content-wrapper">
             <div class="page-header">
-              <h3 class="page-title"> Form elements </h3>
-              <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="#">Forms</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Form elements</li>
-                </ol>
-              </nav>
+              <h3 class="page-title"> Add Carousel Headlines </h3>
             </div>
             <div class="row">
               <div class="col-md-12 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title">Default form</h4>
-                    <p class="card-description"> Basic form layout </p>
                     <form class="forms-sample" method="post" enctype="multipart/form-data" action="{% url 'addheadlines' %}">
                       {% csrf_token %}
                       <div class="form-group">
@@ -48,8 +34,6 @@
                           </span>
                         </div>
                       </div>
-                      
-                    
                       <button type="submit" class="btn btn-gradient-primary me-2">Add</button>
                       <button class="btn btn-light">Cancel</button>
                     </form>
@@ -123,12 +107,11 @@
                           
                         </tr>
                       </thead>
-                        {% for i in admin %}
+                        {% for i in Admin %}
                           <tr>
-                                
                                 <td>{{i.heading1}}</td>
                                 <td>{{i.heading2}}</td>
-                                <td>{{i.heading3}}</td>
+                                <td style="white-space: normal; word-break: break-word; max-width: 450px;">{{i.heading3}}</td>
                                 <td><a href="{% url 'addheadlines_delete' i.id %}">Delete</a></td>
                                 
                             </tr>

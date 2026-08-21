@@ -66,9 +66,7 @@
                 <a href="{% url 'contact' %}" class="nav-item nav-link active">Contact</a>
             </div>
              {% if ename %}
-           <a href="{% url 'my_batch' %}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block"><i class="fa fa-user-circle me-2"></i></a>
-            <a href="{% url 'user_logout' %}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block"><i class="fa fa-solid fa-power-off"></i><br/>log out</a>
-           
+           <a href="{% url 'user_dashboard' %}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block"><i class="fa fa-user-circle me-2"></i></a>           
             {% else %}
             <a href="{% url 'join_now' %}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Join Now<i class="fa fa-arrow-right ms-3"></i></a>
             {% endif %}
@@ -100,7 +98,7 @@
             <div class="row g-4">
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                     <h5>Get In Touch</h5>
-                    <p class="mb-4">The contact form is currently inactive. Get a functional and working contact form with Ajax & PHP in a few minutes. Just copy and paste the files, add a little code and you're done. <a href="https://htmlcodex.com/contact-form">Download Now</a>.</p>
+                    <p class="mb-4">The contact form is currently inactive. Get a functional and working contact form with Ajax & PHP in a few minutes. Just copy and paste the files, add a little code and you're done.Download Now.</p>
                     <div class="d-flex align-items-center mb-3">
                         <div class="d-flex align-items-center justify-content-center flex-shrink-0 bg-primary" style="width: 50px; height: 50px;">
                             <i class="fa fa-map-marker-alt text-white"></i>
@@ -180,8 +178,8 @@
             <div class="row g-5">
                 <div class="col-lg-3 col-md-6">
                     <h4 class="text-white mb-3">Quick Link</h4>
-                    <a class="btn btn-link" href="">About Us</a>
-                    <a class="btn btn-link" href="">Contact Us</a>
+                    <a class="btn btn-link" href="{% url 'teachers_login' %}">Teachers login</a>
+                    <a class="btn btn-link" href="{% url 'adminlogin' %}">Admin login</a>
                     <a class="btn btn-link" href="">Privacy Policy</a>
                     <a class="btn btn-link" href="">Terms & Condition</a>
                     <a class="btn btn-link" href="">FAQs & Help</a>

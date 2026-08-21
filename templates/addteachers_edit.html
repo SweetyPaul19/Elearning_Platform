@@ -1,30 +1,17 @@
-{% extends 'master.html' %}
+{% extends 'admin_master.html' %}
 {% load static %}
-{% block title %}
-
-    AdminKit Demo - Bootstrap 5 Admin Template
-
-{% endblock %}
-
-{% block contain %}
+{% block content %}
 
 <div class="main-panel">
           <div class="content-wrapper">
             <div class="page-header">
-              
-              <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="#">Forms</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Form elements</li>
-                </ol>
-              </nav>
             </div>
             <div class="row">
               <div class="col-md-12 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title">Default form</h4>
-                    <p class="card-description"> Basic form layout </p>
+                    <h4 class="card-title">Teacher edit</h4>
+                    <p class="card-description"> Edit teacher information </p>
                      <form action="/addteachers_edit/{{teacheredit.id}}" method="POST" enctype="multipart/form-data">
                       {% csrf_token %}
                       <div class="form-group">

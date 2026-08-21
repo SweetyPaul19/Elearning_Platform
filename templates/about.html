@@ -66,9 +66,7 @@
                 <a href="{% url 'contact' %}" class="nav-item nav-link">Contact</a>
             </div>
              {% if ename %}
-           <a href="{% url 'my_batch' %}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block"><i class="fa fa-user-circle me-2"></i></a>
-            <a href="{% url 'user_logout' %}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block"><i class="fa fa-solid fa-power-off"></i><br/>log out</a>
-           
+           <a href="{% url 'user_dashboard' %}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block"><i class="fa fa-user-circle me-2"></i></a>           
             {% else %}
             <a href="{% url 'join_now' %}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Join Now<i class="fa fa-arrow-right ms-3"></i></a>
             {% endif %}
@@ -95,54 +93,6 @@
         </div>
     </div>
     <!-- Header End -->
-
-
-    <!-- Service Start -->
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="row g-4">
-                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="service-item text-center pt-3">
-                        <div class="p-4">
-                            <i class="fa fa-3x fa-graduation-cap text-primary mb-4"></i>
-                            <h5 class="mb-3">Skilled Instructors</h5>
-                            <p>Diam elitr kasd sed at elitr sed ipsum justo dolor sed clita amet diam</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="service-item text-center pt-3">
-                        <div class="p-4">
-                            <i class="fa fa-3x fa-globe text-primary mb-4"></i>
-                            <h5 class="mb-3">Online Classes</h5>
-                            <p>Diam elitr kasd sed at elitr sed ipsum justo dolor sed clita amet diam</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="service-item text-center pt-3">
-                        <div class="p-4">
-                            <i class="fa fa-3x fa-home text-primary mb-4"></i>
-                            <h5 class="mb-3">Home Projects</h5>
-                            <p>Diam elitr kasd sed at elitr sed ipsum justo dolor sed clita amet diam</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
-                    <div class="service-item text-center pt-3">
-                        <div class="p-4">
-                            <i class="fa fa-3x fa-book-open text-primary mb-4"></i>
-                            <h5 class="mb-3">Book Library</h5>
-                            <p>Diam elitr kasd sed at elitr sed ipsum justo dolor sed clita amet diam</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Service End -->
-
-
     <!-- About Start -->
     <div class="container-xxl py-5">
         <div class="container">
@@ -277,8 +227,8 @@
             <div class="row g-5">
                 <div class="col-lg-3 col-md-6">
                     <h4 class="text-white mb-3">Quick Link</h4>
-                    <a class="btn btn-link" href="">About Us</a>
-                    <a class="btn btn-link" href="">Contact Us</a>
+                    <a class="btn btn-link" href="{% url 'teachers_login' %}">Teachers login</a>
+                    <a class="btn btn-link" href="{% url 'adminlogin' %}">Admin login</a>
                     <a class="btn btn-link" href="">Privacy Policy</a>
                     <a class="btn btn-link" href="">Terms & Condition</a>
                     <a class="btn btn-link" href="">FAQs & Help</a>

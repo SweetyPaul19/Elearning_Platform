@@ -1,0 +1,189 @@
+{% extends 'user_profile_master.html' %}
+{% load static %}
+{% block content %}
+
+<div class="main-panel">
+    <div class="content-wrapper">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <div class="row justify-content-center">
+            <div class="col-12 px-3 px-lg-4">
+
+                <div class="card profile-card border-0 shadow-lg rounded-4 overflow-hidden">
+
+                    <!-- Cover Image -->
+                    <div class="position-relative">
+
+                        <div style="
+                        height:220px;
+                        background:linear-gradient(120deg,#9fc5ff,#f9f4dc);
+                        ">
+                        </div>
+
+                        
+
+                    </div>
+
+                    <!-- Profile Header -->
+
+                    <div class="px-5 pb-4">
+
+                        <div class="d-flex justify-content-between align-items-center">
+
+                            <div class="d-flex align-items-end">
+
+                                <div class="position-relative">
+
+                                    {% if user.img %}
+                                    <img src="{{ user.img.url }}"
+                                        class="rounded-circle border border-4 border-white shadow"
+                                        style="width:140px;height:140px;margin-top:-70px;object-fit:cover;">
+                                    {% else %}
+                                    <img src="{% static 'assets/images/profile_icon.jpg' %}"
+                                        class="rounded-circle border border-4 border-white shadow"
+                                        style="width:140px;height:140px;margin-top:-70px;object-fit:cover;">
+                                    {% endif %}
+
+                                    <label for="profileImage"
+                                        class="btn btn-primary rounded-circle position-absolute"
+                                        style="bottom:10px;right:5px;width:35px;height:35px;padding:6px;">
+                                        <i class="mdi mdi-camera"></i>
+                                    </label>
+
+                                </div>
+
+                                <div class="ms-4 mb-2">
+
+                                    <h2 class="fw-bold mb-1">
+                                        My Profile
+                                    </h2>
+
+                                    <p class="text-muted mb-0">
+                                        Update your personal details and profile photo
+                                    </p>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <hr class="m-0">
+
+                    <div class="card-body px-5">
+
+                        <form method="POST" enctype="multipart/form-data" action="{% url 'update_profile' %}">
+
+                            {% csrf_token %}
+                            <input type="file" id="profileImage" name="profile_pic" hidden>
+                            <div class="row">
+
+                                <div class="col-md-6 mb-4">
+
+                                    <label class="form-label">
+                                        Full Name
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        name="name"
+                                        value="{{ user.name }}">
+
+                                </div>
+
+                                <div class="col-md-6 mb-4">
+
+                                    <label class="form-label">
+                                        Email
+                                    </label>
+
+                                    <input
+                                        type="email"
+                                        class="form-control"
+                                        name="email"
+                                        value="{{ user.email }}">
+                                </div>
+
+                                <div class="col-md-6 mb-4">
+
+                                    <label class="form-label">
+                                        Phone Number
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        name="phone"
+                                        value="{{ user.phone }}">
+
+                                </div>
+                                <div class="col-md-6 mb-4">
+
+                                    <label class="form-label">
+                                        Gender
+                                    </label>
+
+                                    <select
+                                        class="form-select"
+                                        name="gender">
+                                        {% if user.gender %}
+                                            <option selected>{{ user.gender }}</option>
+                                        {% endif %}
+                                        <option>select</option>
+                                        <option>Male</option>
+                                        <option>Female</option>
+                                        <option>Other</option>
+
+                                    </select>
+
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="mb-4">
+
+                                <label class="form-label">
+                                    Address
+                                </label>
+
+                                <textarea
+                                    placeholder="update your address"
+                                    class="form-control"
+                                    rows="4"
+                                    name="address">{{ user.address }}</textarea>
+
+                            </div>
+
+                            <div class="text-end">
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary px-5">
+
+                                    Save Changes
+
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+{% endblock %}

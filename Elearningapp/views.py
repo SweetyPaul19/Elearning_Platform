@@ -31,12 +31,20 @@ def master(request):
     return render(request,'master.html')  
 def admindashboard(request):
     if request.session.has_key('adminemail'):
-        return render(request,'admindashboard.html')
+        eid=request.session['adminemail']# Get the email of the logged-in user from the session
+        admin=Elearningadmin.objects.get(email=eid)# Retrieve the admin object based on the email
+        stu=elearning_users.objects.count()
+        Teacher=teacher.objects.count()
+        Course=course.objects.count()
+        return render(request,'admindashboard.html', {'admin': admin,'stu':stu,'Teacher':Teacher,'Course':Course})
+
     else:
         messages.success(request,'please login!')
         return redirect('/adminlogin')
 def addadmin(request):
-    admin=Elearningadmin.objects.all()
+    if not request.session.get('adminemail'):
+        messages.error(request, 'Please login first')
+        return redirect('adminlogin')
     if(request.method=='POST'):
         name=request.POST['name']
         email=request.POST['email']
@@ -77,22 +85,28 @@ def delete(request,id):
     return redirect('/addadmin')
 
 def adminlogin(request):
-    if request.session.has_key('adminemail'):
-        del request.session['adminemail']  #loging out process
-    if(request.method=="POST"):
-        email=request.POST['email']
-        password=request.POST['password']
-        usercheck=Elearningadmin.objects.filter(email=email,password=password)
-        if(usercheck):
-            request.session['adminemail']=email
-            messages.success(request,'login successfully')
+    if request.method == "POST":
+        email = request.POST['adminemail']
+        password = request.POST['password']
+
+        usercheck = Elearningadmin.objects.filter(
+            email=email,
+            password=password
+        )
+
+        if usercheck.exists():
+            request.session['adminemail'] = email
+            messages.success(request, 'Login successfully')
             return redirect('/admindashboard')
         else:
-            messages.success(request,'wrong password or username')
+            messages.error(request, 'Wrong password or username')
             return redirect('/adminlogin')
-    else:
-        return render(request,'adminlogin.html')
-
+    return render(request, 'adminlogin.html')
+def admin_logout(request):
+    if request.session.has_key('adminemail'):
+        del request.session['adminemail']  #loging out process
+    messages.success(request,'logout successfully')
+    return redirect('/')
 def addcoursetype(request):
     coursetype1=coursetype.objects.all()
     if(request.method=='POST'):
@@ -124,6 +138,10 @@ def addcoursetype_edit(request,id):
         return render(request,'addcoursetype_edit.html',{'coursetype':coursetype1})
 
 def addcourse(request):
+    if not request.session.get('adminemail'):
+        messages.error(request, 'Please login first')
+        return redirect('adminlogin')
+    admin=Elearningadmin.objects.get(email=request.session['adminemail'])    
     course1=course.objects.all()
     coursetype1=coursetype.objects.all()
     if(request.method=='POST'):
@@ -138,9 +156,13 @@ def addcourse(request):
         messages.success(request,'added successfully')
         return redirect('/addcourse')
     else:    
-        return render(request,'addcourse.html',{'coursetype':coursetype1,'course':course1})
+        return render(request,'addcourse.html',{'coursetype':coursetype1,'course':course1,'admin':admin})
 
 def addcourse_edit(request,id):
+    if not request.session.get('adminemail'):
+        messages.error(request, 'Please login first')
+        return redirect('adminlogin')
+    admin=Elearningadmin.objects.get(email=request.session['adminemail'])    
     course1=course.objects.get(id=id)
     coursetype1=coursetype.objects.all()
     if(request.method=="POST"):
@@ -161,14 +183,18 @@ def addcourse_edit(request,id):
         messages.success(request,'edited successfull')
         return redirect('/addcourse')
     else:
-        return render(request,'addcourse_edit.html',{'coursetype':coursetype1,'course':course1})
+        return render(request,'addcourse_edit.html',{'coursetype':coursetype1,'course':course1,'admin':admin})
 
 def addcourse_delete(request,id): 
     course1=course.objects.get(id=id)  
     course1.delete()  
     return redirect('/addcourse')
 def addteachers(request):
-    course1=teacher.objects.all()
+    if not request.session.get('adminemail'):
+        messages.error(request, 'Please login first')
+        return redirect('adminlogin')
+    admin=Elearningadmin.objects.get(email=request.session['adminemail'])    
+    Teacher=teacher.objects.all()
     course2=course.objects.all()
     if(request.method=='POST'):
         name=request.POST['name']
@@ -181,8 +207,12 @@ def addteachers(request):
         messages.success(request,'added successfully')
         return redirect('/addteachers')
     else:    
-        return render(request,'addteachers.html',{'course':course1,'courses':course2})
+        return render(request,'addteachers.html',{'teacher':Teacher,'courses':course2,'admin':admin})
 def addteachers_edit(request,id):
+    if not request.session.get('adminemail'):
+        messages.error(request, 'Please login first')
+        return redirect('adminlogin')
+    admin=Elearningadmin.objects.get(email=request.session['adminemail'])
     teacher1=teacher.objects.get(id=id)
     if(request.method=="POST"):
         name=request.POST['name']
@@ -199,47 +229,46 @@ def addteachers_edit(request,id):
         messages.success(request,'edited successfull')
         return redirect('/addteachers')
     else:
-        return render(request,'addteachers_edit.html',{'teacheredit':teacher1})   
+        return render(request,'addteachers_edit.html',{'teacheredit':teacher1,'admin':admin})   
 def addteachers_delete(request,id): 
     teacher1=teacher.objects.get(id=id)  
     teacher1.delete()  
-    return redirect('/addteachers')     
-def teacherslogin(request): 
-    if request.session.has_key('email'):
-        del request.session['email']  #loging out process
-    if(request.method=="POST"):
-        email=request.POST['email']
-        password=request.POST['password']
-        usercheck=teacher.objects.filter(email=email,password=password)
-        if(usercheck):
-            request.session['email']=email
-            messages.success(request,'login successfully')
-            return redirect('/teacherdashboard')
-        else:
-            messages.success(request,'wrong password or username')
-            return redirect('/teacherslogin')
-    else:
-        return render(request,'teacherslogin.html')  
-def teacherdashboard(request):
-    if request.session.has_key('email'):
-        return render(request,'teacherdashboard.html')
-    else:
-        messages.success(request,'please login!')
-        return redirect('/teacherslogin')        
+    return redirect('/addteachers')            
 def website_index(request):
     ename=None
+    user = None
+    teacher1=None
     if request.session.has_key('email'):# Check if user is logged in
         eid=request.session['email']# Get the email of the logged-in user from the session 
-        user=elearning_users.objects.get(email=eid)# Retrieve the user object based on the email
-        ename=user.name # Get the name of the logged-in user from the user object 
-        
+        role=request.session.get('role')  # Get the role of the logged-in user from the session
+        if role == 'student':
+
+            user = elearning_users.objects.filter(
+                email=eid
+            ).first()
+
+            if user:
+                ename = user.name
+
+        elif role == 'teacher':
+
+            teacher1 = teacher.objects.filter(
+                email=eid
+            ).first()
+
+            if teacher1:
+                ename = teacher1.name
     admin=headlines.objects.all()
     Coursetype=coursetype.objects.all()
     course1=course.objects.all()
     return render(request,'website_index.html',{'admin':admin,'coursetype':Coursetype,'course':course1,'ename':ename}) 
 
 def addheadlines(request):
-    admin=headlines.objects.all()
+    if not request.session.get('adminemail'):
+        messages.error(request, 'Please login first')
+        return redirect('adminlogin')
+    admin=Elearningadmin.objects.get(email=request.session['adminemail'])    
+    Admin=headlines.objects.all()
     if(request.method=='POST'):
         heading1=request.POST['heading1']
         heading2=request.POST['heading2']
@@ -250,7 +279,7 @@ def addheadlines(request):
         messages.success(request,'added successfully')
         return redirect('/addheadlines')
     else:    
-        return render(request,'addheadlines.html',{'admin':admin})
+        return render(request,'addheadlines.html',{'admin':admin,'Admin':Admin})
 def addheadlines_delete(request,id): 
     admin=headlines.objects.get(id=id)  
     admin.delete()  
@@ -260,7 +289,7 @@ def about(request):
     ename=None
     if request.session.has_key('email'):# Check if user is logged in
         eid=request.session['email']# Get the email of the logged-in user from the session 
-        user=elearning_users.objects.get(email=eid)# Retrieve the user object based on the email
+        user= elearning_users.objects.filter(email=eid).first()# Retrieve the user object based on the email
         ename=user.name # Get the name of the logged-in user from the user object 
     return render(request,'about.html',{'ename':ename})     
 
@@ -280,6 +309,7 @@ def join_now(request):
         phone=request.POST['phone']
         password=request.POST['password']
         school_college=request.POST['school_college']
+        address=request.POST['address']
         # Check if email already exists
         if elearning_users.objects.filter(email=email).exists():
             messages.error(request, "Email already registered.")
@@ -293,7 +323,7 @@ def join_now(request):
         request.session['reg_phone'] = phone
         request.session['reg_password'] = password
         request.session['reg_school'] = school_college
-
+        request.session['reg_address'] = address
         request.session['register_otp'] = otp
 
         expiry = datetime.now() + timedelta(minutes=2)
@@ -329,7 +359,7 @@ def joining_otp_verification(request):
             phone = request.session.get("reg_phone")
             password = request.session.get("reg_password")
             school_college = request.session.get("reg_school")
-
+            address=request.session.get("reg_address")
             # Create a new user in the database
             new_user = elearning_users(
                 name=name,
@@ -337,6 +367,7 @@ def joining_otp_verification(request):
                 phone=phone,
                 password=password,
                 school_college=school_college,
+                address=address
             )
             new_user.save()
 
@@ -357,9 +388,10 @@ def user_login(request):
     if(request.method=="POST"):
         email=request.POST['email']
         password=request.POST['password']
-        usercheck=elearning_users.objects.filter(email=email,password=password)
+        usercheck=elearning_users.objects.filter(email=email,password=password).first()
         if(usercheck):
             request.session['email']=email
+            request.session['role'] = 'student'
             messages.success(request,'login successfully')
             return redirect('/')
         else:
@@ -382,9 +414,13 @@ def course_details(request,id):
     return render(request,'course_details.html',{'course':course1})
 
 def course_assign(request,id):
+    if not request.session.get('adminemail'):
+        messages.error(request, 'Please login first')
+        return redirect('adminlogin')
+    admin=Elearningadmin.objects.get(email=request.session['adminemail'])
     course1=course.objects.all()
     teacher1=teacher.objects.get(id=id)
-    course_assign1=courseassign.objects.all()
+    course_assign1 = courseassign.objects.filter(teacherid=id)
     if(request.method=="POST"):
         assigncourse=request.POST['assigncourse']
         course_assign1=courseassign(course_assigned=assigncourse,teacherid=teacher1.id)
@@ -392,7 +428,7 @@ def course_assign(request,id):
         messages.success(request,'assigned successfully')
         return redirect('/addteachers')
     else:
-        return render(request,'course_assign.html',{'teachere':teacher1,'courses':course1,'course_assign':course_assign1}) 
+        return render(request,'course_assign.html',{'teachere':teacher1,'courses':course1,'course_assign':course_assign1,'admin':admin}) 
 def course_remove(request,id):
     course_assign1=courseassign.objects.get(id=id)  # Get the course assignment object based on the provided id 
     course_assign1.delete()  # Delete the course assignment object from the database
@@ -419,7 +455,7 @@ def forgot_password(request):
                 fail_silently=False, # Raise an exception if email sending fails, allowing for error handling and debugging 
             )
 
-            messages.success(request,'OTP sent to your email')
+            messages.success(request,'OTP sent to your email') # Display a success message to the user indicating that the OTP has been sent to their email 
             return redirect('/verify_user_otp')
         else:
             messages.success(request,'email not found')
@@ -494,24 +530,195 @@ def reset_password(request):
     return render(request, 'reset_password.html')    
 
 def before_payment(request,id):
-    course1=course.objects.get(id=id)
+    course1=course.objects.get(id=id) # Get the course object based on the provided id 
     user=elearning_users.objects.all()
     if request.session.has_key('email'):
         eid=request.session['email']# Get the email of the logged-in user from the session 
         user=elearning_users.objects.get(email=eid)# Retrieve the user object based on the email
-        
+        if(request.method=="POST"):
+            user_email=request.POST['email']
+            course_taken_date=datetime.now().strftime('%Y-%m-%d')  # Get the current date and time as the course taken date
+            my_batch1=my_batch(course_id=id,user_email=user_email,course_taken_date=course_taken_date)# Create a new instance of the my_batch model with the provided course and user details
+            my_batch1.save()
+            messages.success(request,'batch added successfully')  # Display a success message to the user
+            return redirect('/user_dashboard')
+        return render(request, 'before_payment.html',{'course': course1,'user': user})
     
     else:  
         return redirect('/user_login')  # Redirect to login page if user is not logged in      
     
-    return render(request, 'before_payment.html',{'course': course1,'user': user})
+def user_profile_master(request):
+    if request.session.has_key('email'):
+        eid=request.session['email']# Get the email of the logged-in user from the session 
+        user=elearning_users.objects.get(email=eid)# Retrieve the user object based on the email
+        ename=user.name # Get the name of the logged-in user from the user object 
+        return render(request, 'user_profile_master.html', {'ename':ename, 'user': user})
+    else:
+        messages.success(request,'please login!')
+        return redirect('/user_login')
+
 def user_dashboard(request):
     if request.session.has_key('email'):
         eid=request.session['email']# Get the email of the logged-in user from the session 
         user=elearning_users.objects.get(email=eid)# Retrieve the user object based on the email
         ename=user.name # Get the name of the logged-in user from the user object 
-        return render(request, 'my_batch.html', {'ename':ename})
+        return render(request, 'user_dashboard.html', {'ename':ename, 'user': user})
     else:
         messages.success(request,'please login!')
         return redirect('/user_login')
-    
+
+
+def My_Batch(request):
+    if request.session.has_key('email'):
+        eid=request.session['email']# Get the email of the logged-in user from the session 
+        user=elearning_users.objects.get(email=eid)# Retrieve the user object based on the email
+        ename=user.name # Get the name of the logged-in user from the user object 
+        batches=my_batch.objects.filter(user_email=eid)  # Retrieve all batches associated with the logged-in user's email
+        course_list=[] # Create an empty list to store course objects corresponding to the user's batches
+        for batch in batches:
+            try:
+                c = course.objects.get(id=int(batch.course_id))
+                course_list.append(c)
+            except course.DoesNotExist: # Handle the case where the course with the given ID does not exist 
+                pass
+        return render(request, 'My_Batch.html', {'ename':ename,'my_batches':batches,'courses':course_list, 'user': user})
+    else:
+        messages.success(request,'please login!')
+        return redirect('/user_login')
+def update_profile(request):
+    if request.session.has_key('email'):
+        eid=request.session['email']# Get the email of the logged-in user from the session 
+        user=elearning_users.objects.get(email=eid)# Retrieve the user object based on the email
+        ename=user.name # Get the name of the logged-in user from the user object 
+        if request.method == "POST":
+            print(request.FILES.get('profile_pic'))
+            user.name = request.POST.get('name')
+            user.phone = request.POST.get('phone')
+            user.email = request.POST.get('email')
+            user.address = request.POST.get('address')
+            user.gender = request.POST.get('gender')
+            # Update profile picture only if a new one is selected
+            if 'profile_pic' in request.FILES:
+                user.img = request.FILES['profile_pic']
+            user.save()
+            messages.success(request, "Profile updated successfully.")
+        return render(request, 'user_my_profile.html', {'ename':ename,'user':user})
+    else:
+        messages.success(request,'please login!')
+        return redirect('/user_login')
+def recorded_lecture(request):
+    if request.session.has_key('email'):
+        eid=request.session['email']# Get the email of the logged-in user from the session 
+        user=elearning_users.objects.get(email=eid)# Retrieve the user object based on the email
+        ename=user.name # Get the name of the logged-in user from the user object 
+        batches=my_batch.objects.filter(user_email=eid)  # Retrieve all batches associated with the logged-in user's email
+        course_list=[] # Create an empty list to store course objects corresponding to the user's batches
+        for batch in batches:
+            try:
+                c = course.objects.get(id=int(batch.course_id))
+                course_list.append(c)
+            except course.DoesNotExist: # Handle the case where the course with the given ID does not exist 
+                pass
+        return render(request, 'recorded_lecture.html', {'ename':ename,'my_batches':batches,'courses':course_list, 'user': user})
+    else:
+        messages.success(request,'please login!')
+        return redirect('/user_login')        
+def teachers_login(request): 
+    if request.session.has_key('email'):
+        del request.session['email']  #loging out process
+    if(request.method=="POST"):
+        email=request.POST['email']
+        password=request.POST['password']
+        usercheck=teacher.objects.filter(email=email,password=password).first()
+        if(usercheck):
+            request.session['email']=email
+            request.session['role']='teacher'
+            messages.success(request,'login successfully')
+            return redirect('/teacherdashboard')
+        else:
+            messages.success(request,'wrong password or username')
+            return redirect('/teachers_login')
+    else:
+        return render(request,'teachers_login.html')        
+def teachers_master(request):
+    if request.session.has_key('email'):
+        eid=request.session['email']# Get the email of the logged-in user from the session 
+        Teacher=teacher.objects.get(email=eid)# Retrieve the user object based on the email
+        ename=Teacher.name # Get the name of the logged-in user from the user object 
+        return render(request, 'teachers_master.html', {'ename':ename, 'Teacher': Teacher})
+    else:
+        messages.success(request,'please login!')
+        return redirect('/teachers_login')        
+def teacherdashboard(request):
+    if request.session.has_key('email'):
+        eid=request.session['email']# Get the email of the logged-in user from the session
+        Teacher=teacher.objects.get(email=eid)# Retrieve the user object based on the email
+        return render(request,'teacherdashboard.html',{'Teacher':Teacher})
+    else:
+        messages.success(request,'please login!')
+        return redirect('/teachers_login')         
+def teacher_logout(request):
+    if request.session.has_key('email'):
+        del request.session['email']  #loging out process
+    messages.success(request,'logout successfully')
+    return redirect('/')
+def teacher_my_batch(request):
+
+    if request.session.has_key('email'):
+
+        eid = request.session['email']
+        print(eid)
+        # Get logged-in teacher
+        Teacher = teacher.objects.get(email=eid)
+        print(Teacher)
+        # Get courses assigned to this teacher
+        batches = courseassign.objects.filter(
+            teacherid=int(Teacher.id)
+        )
+        print(batches)
+        course_list = []
+
+        for batch in batches:
+
+            try:
+                # course_assigned contains course ID as a string
+                c = course.objects.get(
+                    id=int(batch.course_assigned)
+                )
+
+                course_list.append(c)
+
+            except (course.DoesNotExist, ValueError, TypeError):
+                pass
+
+        return render(
+            request,
+            'teacher_my_batch.html',
+            {
+                'my_batches': batches,
+                'courses': course_list,
+                'Teacher': Teacher
+            }
+        )
+
+    else:
+        messages.success(request, 'Please login!')
+        return redirect('/teachers_login')
+def admin_master(request):
+    if request.session.has_key('email'):
+        eid=request.session['email']# Get the email of the logged-in user from the session
+        admin=Elearningadmin.objects.get(email=eid)# Retrieve the user object based on the email
+        return render(request,'admin_master.html',{'admin':admin})
+    else:
+        messages.success(request,'please login!')
+        return redirect('/adminlogin')    
+
+def admin_viewalldetails_teachers(request):
+    if request.session.has_key('adminemail'):
+        eid=request.session['adminemail']# Get the email of the logged-in user from the session
+        admin=Elearningadmin.objects.get(email=eid)# Retrieve the user object based on the email
+        Teacher=teacher.objects.all()
+        return render(request,'admin_viewalldetails_teachers.html',{'admin':admin,'Teacher':Teacher})
+    else:
+        messages.success(request,'please login!')
+        return redirect('/adminlogin')  

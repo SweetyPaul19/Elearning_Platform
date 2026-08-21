@@ -1,16 +1,10 @@
-{% extends 'master.html' %}
+{% extends 'admin_master.html' %}
 {% load static %}
-{% block title %}
-
-    AdminKit Demo - Bootstrap 5 Admin Template
-
-{% endblock %}
-
-{% block contain %}
+{% block content %}
 <div class="main-panel">
           <div class="content-wrapper">
             <div class="page-header">
-              <h3 class="page-title"> Form elements </h3>
+              <h3 class="page-title">Add Teachers in EduNova</h3>
               <nav aria-label="breadcrumb">
                 
               </nav>
@@ -51,55 +45,45 @@
                   </div>
                 </div>
               </div>
-			  <div class="row">
-
-              <div class="col-lg-12 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">course Table</h4>
-                  
-                    <table class="table table-striped">
-                      <thead>
-                        <tr>
-                          
-                          <th>name</th>
-                          <th> phone no. </th>
-                            <th> email </th>
+              <div class="row">
+                <div class="col-lg-12 grid-margin stretch-card">
+                      <div class="card">
+                        <div class="card-body">
+                          <h4 class="card-title">course Table</h4>
+                        
+                          <table class="table table-striped">
+                            <thead>
+                              <tr>
+                                
+                                <th>name</th>
+                                <th> phone no. </th>
+                                  <th> email </th>
+                                  
+                                <th> photo</th>
+                                  <th> Edit</th>
+                                <th>Delete</th>
+                                <th>assign course</th>
+                              </tr>
+                            </thead>
+                              {% for i in teacher %}
+                                <tr>
+                                      <td>{{i.name}}</td>
+                                      <td>{{i.phone}}</td>
+                                      <td>{{i.email}}</td>
+                                      
+                                      <td><img src="media/{{i.file}}" alt="" width="100px" height="100px"></td>
+                                      <td><a href="addteachers_edit/{{i.id}}">edit</a></td>
+                                      <td><a href="addteachers_delete/{{i.id}}">Delete</a></td>
+                                      <td><a href="course_assign/{{i.id}}">Assign</a></td>
+                                  </tr>
+                              {% endfor %}
                             
-                          <th> photo</th>
-                            <th> Edit</th>
-                          <th>Delete</th>
-<<<<<<< HEAD
-                          <th>assign course</th>
-=======
-                          <th>Assigned Course</th>
->>>>>>> 661d7ac0f766727dedddc654a88d43c7c3c1fae9
-                        </tr>
-                      </thead>
-                        {% for i in course %}
-                          <tr>
-                                <td>{{i.name}}</td>
-                                <td>{{i.phone}}</td>
-                                <td>{{i.email}}</td>
-                                
-                                <td><img src="media/{{i.file}}" alt="" width="100px" height="100px"></td>
-                                <td><a href="addteachers_edit/{{i.id}}">edit</a></td>
-                                <td><a href="addteachers_delete/{{i.id}}">Delete</a></td>
-<<<<<<< HEAD
-                                <td><a href="course_assign/{{i.id}}">Assign</a></td>
-=======
-                                <td><a href="assigncourse/{{i.id}}">Assigned Course</a></td>
-                                
->>>>>>> 661d7ac0f766727dedddc654a88d43c7c3c1fae9
-                            </tr>
-                        {% endfor %}
-                      
-                      
-                    </table>
-                  </div>
-                </div>
+                            
+                          </table>
+                        </div>
+                      </div>
+                    </div>
               </div>
-            </div>
           </div>
               
 {% endblock %}

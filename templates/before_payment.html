@@ -89,7 +89,7 @@
                 </div>
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
                 <div class="col-lg-8 col-md-12 wow fadeInUp" data-wow-delay="0.5s">
-                    <form method="post">
+                    <form method="post" action="/before_payment/{{ course.id }}">
                         {% csrf_token %}
                         <div class="row g-3">
                             <div class="col-md-6">

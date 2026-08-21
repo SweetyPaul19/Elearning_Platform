@@ -53,6 +53,8 @@ class elearning_users(models.Model):
     confirm_password=models.CharField(max_length=50,default='')   
     school_college=models.CharField(max_length=100,default='')
     address=models.CharField(max_length=100,default='')
+    gender=models.CharField(max_length=50,default='')
+    img=models.ImageField(upload_to='image',default='')
     def _str_(self):
         return self.name
 class courseassign(models.Model):
@@ -63,9 +65,7 @@ class courseassign(models.Model):
 
 class my_batch(models.Model):
     course_id=models.CharField(max_length=50,default=" ")
-    course_name=models.CharField(max_length=50,default=" ")
-    user_name=models.CharField(max_length=50,default=" ")
-    course_date=models.DateField(max_length=50,default=" ")
-    expiry_date=models.DateField(max_length=50,default=" ")
+    user_email=models.EmailField(max_length=50,default=" ")
+    course_taken_date=models.DateField(max_length=50,default=" ")
     def _str_(self):
-            return self.user_name   
+            return self.user_email   

@@ -1,0 +1,65 @@
+{% extends 'user_profile_master.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="main-panel">
+    <div class="content-wrapper">
+
+        <div class="page-header mb-4">
+            <h3 class="page-title">
+                Hi {{ ename }}, here are your courses 🚀
+            </h3>
+        </div>
+
+        <div class="row">
+
+            {% for c in courses %}
+
+            <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
+
+                <div class="course-card">
+
+                    <div class="course-image">
+                        <img src="{{ c.file.url }}" alt="{{ c.name }}">
+                    </div>
+
+                    <div class="course-body">
+
+                        <h4>{{ c.name }}</h4>
+
+                        <p>
+                            HTML, CSS, JavaScript, React, Node.js,
+                            Express.js, MongoDB
+                        </p>
+
+                        <div class="progress-text">
+                            <span>Course Progress</span>
+                            <span>60%</span>
+                        </div>
+
+                        <div class="progress">
+                            <div class="progress-bar bg-success"
+                                style="width:60%">
+                            </div>
+                        </div>
+
+                        <a href="{% url 'recorded_lecture' %}" class="btn continue-btn">
+                            <i class="mdi mdi-play-circle"></i>
+                            Continue Learning
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

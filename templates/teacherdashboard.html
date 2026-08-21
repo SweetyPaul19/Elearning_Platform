@@ -1,20 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    {% if messages %}
+{% extends 'teachers_master.html' %}
+{% load static %}
 
-    {% for message in messages %}
-   <script>alert('{{message}}');</script> 
-    {% endfor %}
-    {% endif %}
-    <div>
-        <h1>Teacher Dashboard</h1>
-        <p>Welcome to your dashboard!</p>
-    </div>
-</body>
-</html>
+{% block content %}
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title">
+                Hi, wellcome {{ Teacher.name }}
+              </h3>
+            </div>
+            <div class="row">
+              <div class="col-md-4 stretch-card grid-margin">
+                <div class="card bg-gradient-danger card-img-holder text-white">
+                  <div class="card-body">
+                    <img src="{% static 'assets/images/dashboard/circle.svg' %}" class="card-img-absolute" alt="circle-image" />
+                    <h4 class="font-weight-normal mb-3">Weekly Sales <i class="mdi mdi-chart-line mdi-24px float-end"></i>
+                    </h4>
+                    <h2 class="mb-5">$ 15,0000</h2>
+                    <h6 class="card-text">Increased by 60%</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            
+          </div>
+          
+         
+          
+
+{% endblock %}

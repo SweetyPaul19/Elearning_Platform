@@ -24,7 +24,7 @@
     <!-- Libraries Stylesheet -->
     <link href="{% static 'web_assets/lib/animate/animate.min.css' %}" rel="stylesheet">
     <link href="{% static 'web_assets/lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
-
+    <link rel="stylesheet" href="/static/lib/owlcarousel/assets/owl.theme.default.min.css">
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{% static 'web_assets/css/bootstrap.min.css' %}" rel="stylesheet">
 
@@ -51,7 +51,7 @@
 
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
-        <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+        <a href="{% url 'website_index' %}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
             <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>EduNova</h2>
         </a>
         <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -71,16 +71,10 @@
                     </div>
                 </div>
                 <a href="{% url 'contact' %}" class="nav-item nav-link">Contact</a>
-                {% if ename %}
-                <a href="{% url 'contact' %}" class="nav-item nav-link">My Batch</a>
-
-                {% endif %}
             </div>
                 
             {% if ename %}
-           <a href="{% url 'my_batch' %}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block"><i class="fa fa-user-circle me-2"></i></a>
-            <a href="{% url 'user_logout' %}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block"><i class="fa fa-solid fa-power-off"></i><br/>log out</a>
-           
+           <a href="{% url 'user_dashboard' %}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block"><i class="fa fa-user-circle me-2"></i></a>           
             {% else %}
             <a href="{% url 'join_now' %}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Join Now<i class="fa fa-arrow-right ms-3"></i></a>
             {% endif %}
@@ -114,7 +108,6 @@
                 </div>
             </div>
             {% endfor %}
-
 
 
         </div>
@@ -381,7 +374,7 @@
             </div>
             <div class="owl-carousel testimonial-carousel position-relative">
                 <div class="testimonial-item text-center">
-                    <img class="border rounded-circle p-2 mx-auto mb-3" src="img/testimonial-1.jpg" style="width: 80px; height: 80px;">
+                    <img class="border rounded-circle p-2 mx-auto mb-3" src="{% static 'web_assets/img/testimonial-1.jpg' %}" style="width: 80px; height: 80px;">
                     <h5 class="mb-0">Client Name</h5>
                     <p>Profession</p>
                     <div class="testimonial-text bg-light text-center p-4">
@@ -389,7 +382,7 @@
                     </div>
                 </div>
                 <div class="testimonial-item text-center">
-                    <img class="border rounded-circle p-2 mx-auto mb-3" src="img/testimonial-2.jpg" style="width: 80px; height: 80px;">
+                    <img class="border rounded-circle p-2 mx-auto mb-3" src="{% static 'web_assets/img/testimonial-2.jpg' %}" style="width: 80px; height: 80px;">
                     <h5 class="mb-0">Client Name</h5>
                     <p>Profession</p>
                     <div class="testimonial-text bg-light text-center p-4">
@@ -397,7 +390,7 @@
                     </div>
                 </div>
                 <div class="testimonial-item text-center">
-                    <img class="border rounded-circle p-2 mx-auto mb-3" src="img/testimonial-3.jpg" style="width: 80px; height: 80px;">
+                    <img class="border rounded-circle p-2 mx-auto mb-3" src="{% static 'web_assets/img/testimonial-3.jpg' %}" style="width: 80px; height: 80px;">
                     <h5 class="mb-0">Client Name</h5>
                     <p>Profession</p>
                     <div class="testimonial-text bg-light text-center p-4">
@@ -405,7 +398,7 @@
                     </div>
                 </div>
                 <div class="testimonial-item text-center">
-                    <img class="border rounded-circle p-2 mx-auto mb-3" src="img/testimonial-4.jpg" style="width: 80px; height: 80px;">
+                    <img class="border rounded-circle p-2 mx-auto mb-3" src="{% static 'web_assets/img/testimonial-4.jpg' %}" style="width: 80px; height: 80px;">
                     <h5 class="mb-0">Client Name</h5>
                     <p>Profession</p>
                     <div class="testimonial-text bg-light text-center p-4">
@@ -424,8 +417,8 @@
             <div class="row g-5">
                 <div class="col-lg-3 col-md-6">
                     <h4 class="text-white mb-3">Quick Link</h4>
-                    <a class="btn btn-link" href="">About Us</a>
-                    <a class="btn btn-link" href="">Contact Us</a>
+                    <a class="btn btn-link" href="{% url 'teachers_login' %}">Teachers login</a>
+                    <a class="btn btn-link" href="{% url 'adminlogin' %}">Admin login</a>
                     <a class="btn btn-link" href="">Privacy Policy</a>
                     <a class="btn btn-link" href="">Terms & Condition</a>
                     <a class="btn btn-link" href="">FAQs & Help</a>
