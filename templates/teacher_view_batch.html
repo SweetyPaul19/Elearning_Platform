@@ -1,0 +1,211 @@
+{% extends 'teachers_master.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="row">
+          <div class="page-header">
+            <h3 class="page-title">
+                {{ batche.name }}
+            </h3>
+          </div>
+        <div class="col-md-4 stretch-card grid-margin">
+          <div class="card bg-gradient-danger card-img-holder text-white">
+            <div class="card-body">
+              <img src="{% static 'assets/images/dashboard/circle.svg' %}" class="card-img-absolute" alt="circle-image" />
+              <h4 class="font-weight-normal mb-3">Total Students <i class="mdi mdi-chart-line mdi-24px float-end"></i>
+              </h4>
+              <h2 class="mb-5">{{ total_students }}</h2>
+              <h6 class="card-text"></h6>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">upload lectures </h4>
+                    <p class="card-description">  </p>
+                    <form class="forms-sample" method="post" action="/Upload_lecture/{{ batche.id }}" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      <div class="form-group">
+                        <input type="text" class="form-control" id="exampleInputName1" name="lecture_title" placeholder="Lecture Title">
+                        <input type="file" class="form-control" id="exampleInputName1" name="lecture_file" placeholder="video">
+                      </div>
+                    
+                      <button type="submit" class="btn btn-gradient-primary me-2">Upload</button>
+                      
+                    </form>
+                  </div>
+        </div> -->
+
+        <div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+
+        <div class="card">
+
+            <div class="card-body">
+
+                <h4 class="card-title">
+                    Live Classes
+                </h4>
+
+                <a href="{% url 'create_live_class' batche.id %}"
+                   class="btn btn-gradient-primary mb-4">
+
+                    <i class="mdi mdi-video"></i>
+
+                    Create Live Class
+
+                </a>
+
+
+                {% if live_classes %}
+
+                <div class="table-responsive">
+
+                    <table class="table table-striped">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Class</th>
+
+                                <th>Date</th>
+
+                                <th>Start Time</th>
+
+                                <th>End Time</th>
+                                <th>Status</th>
+                                <th>Action</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for live in live_classes %}
+
+                            <tr>
+
+                                <td>
+                                    {{ live.title }}
+                                </td>
+
+                                <td>
+                                    {{ live.scheduled_date }}
+                                </td>
+
+                                <td>
+                                    {{ live.start_time }}
+                                </td>
+
+                                <td>
+                                    {{ live.end_time }}
+                                </td>
+
+                                <td>
+                                    {{ live.class_status }}
+                                </td>
+
+                                <td>
+                                    {% if live.class_status == "Upcoming" %}
+                                        <a href="{% url 'teacher_live_class' live.id %}"
+                                        class="btn btn-warning">
+                                            <i class="mdi mdi-video"></i>
+                                            Start Class
+                                        </a>
+                                    {% elif live.class_status == "Live Now" %}
+                                        <a href="{% url 'teacher_live_class' live.id %}"
+                                        class="btn btn-success">
+                                            <i class="mdi mdi-video"></i>
+                                            Join Class
+                                        </a>
+                                    {% else %}
+                                        <button class="btn btn-secondary" disabled>
+                                            <i class="mdi mdi-close-circle"></i>
+                                            Class Ended
+                                        </button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                {% else %}
+
+                    <p class="text-muted">
+                        No live classes scheduled yet.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+        
+        <!-- <div class="card mb-4">
+    <div class="card-body">
+
+        <h4 class="card-title">
+            Live Classes
+        </h4>
+
+        <p class="card-description">
+            Conduct live classes for {{ batche.name }}
+        </p>
+
+        <a href="{% url 'create_live_class' batche.id %}"
+           class="btn btn-gradient-success">
+
+            <i class="mdi mdi-video"></i>
+
+            Create Live Class
+
+        </a>
+
+    </div>
+</div> -->
+
+
+
+        <div class="row">
+                <div class="col-lg-12 grid-margin stretch-card">
+                      <div class="card">
+                        <div class="card-body">
+                          <h4 class="card-title">Uploaded Lectures</h4>
+                        
+                          <table class="table table-striped">
+                            <thead>
+                              <tr>
+                                <th>Topic name</th>
+                                <th> Delete </th>
+                              </tr>
+                            </thead>
+                              {% for i in all_ready_exist_lectures %}
+                                <tr>
+                                  <td><a href="lecture_video_for_teacher/{{i.id}}">{{i.lecture_title}}</a></td>
+                                  <td><a href="delete_lecture/{{i.id}}" class="btn btn-danger">Delete</a></td>
+                                  </tr>
+                              {% endfor %}
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+              </div>
+
+        </div>
+    </div> 
+</div>
+{% endblock %}

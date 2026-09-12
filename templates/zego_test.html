@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+
+    <title>ZEGOCLOUD Test</title>
+
+    <style>
+        html,
+        body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #root {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="root"></div>
+
+<script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js"></script>
+
+<script>
+
+    // ============================
+    // ZEGOCLOUD CONFIGURATION
+    // ============================
+
+    const appID = YOUR_APP_ID;
+
+    const serverSecret = "YOUR_SERVER_SECRET";
+
+    const roomID = "test_room_001";
+
+    const userID = "teacher_001";
+
+    const userName = "Teacher";
+
+
+    // ============================
+    // GENERATE KIT TOKEN
+    // ============================
+
+    const kitToken =
+        ZegoUIKitPrebuilt.generateKitTokenForTest(
+            appID,
+            serverSecret,
+            roomID,
+            userID,
+            userName
+        );
+
+
+    // ============================
+    // CREATE ZEGOCLOUD INSTANCE
+    // ============================
+
+    const zp = ZegoUIKitPrebuilt.create(kitToken);
+
+
+    // ============================
+    // JOIN ROOM
+    // ============================
+
+    zp.joinRoom({
+
+        container: document.querySelector("#root"),
+
+        scenario: {
+            mode: ZegoUIKitPrebuilt.VideoConference
+        },
+
+        showScreenSharingButton: true,
+
+        showTextChat: true,
+
+        showUserList: true,
+
+        turnOnCameraWhenJoining: true,
+
+        turnOnMicrophoneWhenJoining: true,
+
+        showPreJoinView: true
+
+    });
+
+</script>
+
+</body>
+</html>

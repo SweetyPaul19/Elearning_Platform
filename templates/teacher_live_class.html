@@ -1,0 +1,209 @@
+{% extends 'teachers_master.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="main-panel">
+
+    <div class="content-wrapper">
+
+        <div class="page-header">
+            <h3 class="page-title">
+                {{ live_class.title }}
+            </h3>
+        </div>
+
+        <div class="card">
+
+            <div class="card-body">
+
+                <h4 class="card-title">
+                    {{ live_class.course.name }}
+                </h4>
+
+                <p class="card-description">
+                    Live Class
+                </p>
+
+                <!-- ZEGOCLOUD classroom -->
+                <div id="zego-container"
+                     style="width: 100%; height: 650px;">
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ZEGOCLOUD Web UIKit -->
+<script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js"></script>
+
+
+<script>
+
+async function joinLiveClass() {
+
+    try {
+
+        /*
+         * Step 1:
+         * Ask Django for the Token04
+         */
+
+        const response = await fetch(
+            "{% url 'generate_zego_token' live_class.id %}"
+        );
+
+
+        const data = await response.json();
+
+
+        /*
+         * Check Django response
+         */
+
+        if (!data.success) {
+
+            alert(data.message);
+
+            return;
+        }
+
+
+        /*
+         * Step 2:
+         * Get information from Django
+         */
+
+        const token = data.token;
+
+        const appID = data.app_id;
+
+        const roomID = data.room_id;
+
+        const userID = data.user_id;
+
+        const userName = data.user_name;
+
+
+        console.log("App ID:", appID);
+
+        console.log("Room ID:", roomID);
+
+        console.log("User ID:", userID);
+
+
+        /*
+         * Step 3:
+         * Convert Token04 into a
+         * ZEGOCLOUD Kit Token
+         */
+
+        const kitToken =
+            ZegoUIKitPrebuilt.generateKitTokenForProduction(
+                appID,
+                token,
+                roomID,
+                userID,
+                userName
+            );
+
+
+        /*
+         * Step 4:
+         * Create ZEGOCLOUD instance
+         */
+
+        const zp = ZegoUIKitPrebuilt.create(
+            kitToken
+        );
+
+
+        /*
+         * Step 5:
+         * Join the room
+         */
+
+        zp.joinRoom({
+
+            container:
+                document.querySelector("#zego-container"),
+
+            scenario: {
+
+                mode:
+                    ZegoUIKitPrebuilt.VideoConference
+
+            },
+
+            /*
+             * Show pre-join screen
+             */
+
+            showPreJoinView: true,
+
+            /*
+             * Teacher starts with
+             * camera ON
+             */
+
+            turnOnCameraWhenJoining: true,
+
+            /*
+             * Teacher starts with
+             * microphone ON
+             */
+
+            turnOnMicrophoneWhenJoining: true,
+
+            /*
+             * Screen sharing
+             */
+
+            showScreenSharingButton: true,
+
+            /*
+             * Chat
+             */
+
+            showTextChat: true,
+
+            /*
+             * Participant list
+             */
+
+            showUserList: true
+
+        });
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "ZEGOCLOUD ERROR:",
+            error
+        );
+
+        alert(
+            "Unable to join the live class."
+        );
+
+    }
+
+}
+
+
+/*
+ * Start the live class
+ */
+
+joinLiveClass();
+
+</script>
+
+{% endblock %}

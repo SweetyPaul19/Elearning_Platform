@@ -12,7 +12,10 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
 
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,10 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ek1%4sqy+q0$qqh^*02-es-*#)x45pf=s8a+$o-i!q=re9%cu='
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG') == 'True'
 
 ALLOWED_HOSTS = []
 
@@ -135,5 +138,8 @@ EMAIL_HOST = 'smtp.gmail.com' # Gmail's SMTP server address
 EMAIL_PORT = 587 # Port number for TLS/STARTTLS encryption 
 EMAIL_USE_TLS = True # Enable TLS encryption for secure email transmission 
 
-EMAIL_HOST_USER = 'srakshit923@gmail.com' # sender's Gmail email address 
-EMAIL_HOST_PASSWORD = 'fitg vfhf tkqy aush' # App password generated for the email account 
+EMAIL_HOST_USER =os.getenv('EMAIL_HOST_USER') # sender's Gmail email address 
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD') # App password generated for the email account 
+
+ZEGO_APP_ID = int(os.getenv('ZEGO_APP_ID')) 
+ZEGO_SERVER_SECRET = os.getenv('ZEGO_SERVER_SECRET')

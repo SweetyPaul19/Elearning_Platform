@@ -1,0 +1,53 @@
+{% extends 'teachers_master.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="main-panel">
+    <div class="content-wrapper">
+
+        <div class="page-header">
+            <h3 class="page-title">
+                {{ lecture.lecture_title }}
+            </h3>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+
+                <h4 class="card-title">
+                    {{ lecture.lecture_title }}
+                </h4>
+
+                <div class="video-container">
+
+                    <video
+                        width="100%"
+                        controls
+                        controlsList="nodownload"
+                    >
+                        <source
+                            src="{{ lecture.lecture_file.url }}"
+                            type="video/mp4"
+                        >
+
+                        Your browser does not support the video tag.
+
+                    </video>
+
+                </div>
+
+                <br>
+
+                <a href="javascript:history.back()"
+                   class="btn btn-secondary">
+                    ← Back
+                </a>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

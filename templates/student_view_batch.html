@@ -1,0 +1,164 @@
+{% extends 'user_profile_master.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="main-panel">
+    <div class="content-wrapper">
+
+        <!-- Course Header -->
+        <div class="page-header">
+            <h3 class="page-title">
+                {{ batche.name }}
+            </h3>
+        </div>
+
+
+        <!-- Live Classes -->
+        <div class="row">
+
+            <div class="col-lg-12 grid-margin stretch-card">
+
+                <div class="card">
+
+                    <div class="card-body">
+
+                        <h4 class="card-title">
+                            Live Classes
+                        </h4>
+
+                        <p class="card-description">
+                            Attend live classes conducted by your teacher
+                        </p>
+
+
+                        {% if live_classes %}
+
+                        <div class="table-responsive">
+
+                            <table class="table table-striped">
+
+                                <thead>
+                                    <tr>
+                                        <th>Class</th>
+                                        <th>Date</th>
+                                        <th>Start Time</th>
+                                        <th>End Time</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    {% for live in live_classes %}
+
+                                    <tr>
+
+                                        <td>
+                                            {{ live.title }}
+                                        </td>
+
+                                        <td>
+                                            {{ live.scheduled_date }}
+                                        </td>
+
+                                        <td>
+                                            {{ live.start_time }}
+                                        </td>
+
+                                        <td>
+                                            {{ live.end_time }}
+                                        </td>
+
+                                        <td>
+
+                                            {% if live.class_status == "Upcoming" %}
+
+                                                <label class="badge badge-warning">
+                                                    Upcoming
+                                                </label>
+
+                                            {% elif live.class_status == "Live Now" %}
+
+                                                <label class="badge badge-success">
+                                                    Live Now
+                                                </label>
+
+                                            {% else %}
+
+                                                <label class="badge badge-secondary">
+                                                    Ended
+                                                </label>
+
+                                            {% endif %}
+
+                                        </td>
+
+                                        <td>
+
+                                            {% if live.class_status == "Live Now" %}
+
+                                                <a href="{% url 'student_live_class' live.id %}"
+                                                   class="btn btn-success">
+
+                                                    <i class="mdi mdi-video"></i>
+                                                    Join Class
+
+                                                </a>
+
+                                            {% elif live.class_status == "Upcoming" %}
+
+                                                <button class="btn btn-warning" disabled>
+
+                                                    Not Started
+
+                                                </button>
+
+                                            {% else %}
+
+                                                <button class="btn btn-secondary" disabled>
+
+                                                    Class Ended
+
+                                                </button>
+
+                                            {% endif %}
+
+                                        </td>
+
+                                    </tr>
+
+                                    {% endfor %}
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                        {% else %}
+
+                            <div class="text-center py-4">
+
+                                <p class="text-muted">
+                                    No live classes scheduled for this course.
+                                </p>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

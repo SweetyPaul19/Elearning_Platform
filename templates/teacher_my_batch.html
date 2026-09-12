@@ -14,25 +14,27 @@
 
         <div class="row">
 
-            {% for c in my_batches %}
+            {% for c in courses %}
 
-            <div class="col-md-4 mb-4">
-                <div class="card">
-
-                    <div class="card-body">
-
-                        <h4 class="card-title">
-                            {{ c.name }}
-                        </h4>
-
-                        <p class="card-text">
-                            Course ID: {{ c.id }}
-                        </p>
-
+           <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="course-item bg-light" style="border: 1px solid black;">
+                        <div class="position-relative overflow-hidden">
+                            <img class="img-fluid" src="{{ c.file.url }}" alt="">
+                            
+                        </div>
+                        <div class="text-center p-4 pb-0">
+                            <h5 class="mb-4">{{ c.name }}</h5>
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="{% url 'teacher_view_batch' c.id %}"
+                                class="btn btn-primary flex-fill">
+                                    View
+                                </a>
+                                
+                            </div>                    
+                         </div>
+                        
                     </div>
-
                 </div>
-            </div>
 
             {% empty %}
 

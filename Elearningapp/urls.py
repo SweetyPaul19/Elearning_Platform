@@ -43,11 +43,18 @@ urlpatterns=[
     path('user_dashboard',views.user_dashboard,name='user_dashboard'),
     path('My_Batch',views.My_Batch,name='My_Batch'),
     path('update_profile',views.update_profile,name='update_profile'),
-    path('recorded_lecture',views.recorded_lecture,name='recorded_lecture'),
+    path('student_view_batch/<int:id>',views.student_view_batch,name='student_view_batch'),
     path('teachers_login',views.teachers_login,name='teachers_login'),
     path('teachers_master',views.teachers_master,name='teachers_master'),
     path('teacher_logout',views.teacher_logout,name='teacher_logout'),
     path('teacher_my_batch',views.teacher_my_batch,name='teacher_my_batch'),
-    path('admin_viewalldetails_teachers',views.admin_viewalldetails_teachers,name='admin_viewalldetails_teachers')
+    path('teacher_view_batch/<int:id>',views.teacher_view_batch,name='teacher_view_batch'),
+    path('admin_viewalldetails_teachers',views.admin_viewalldetails_teachers,name='admin_viewalldetails_teachers'),
+    path('Upload_lecture/<int:id>',views.Upload_leacture,name='Upload_leacture'),
+    path('create_live_class/<int:id>/',views.create_live_class,name='create_live_class'),
+    path('generate_zego_token/<int:id>/',views.generate_zego_token,name='generate_zego_token'),
+    path('teacher_live_class/<int:id>/',views.teacher_live_class,name='teacher_live_class'),
+    path('student_live_class/<int:id>/',views.student_live_class,name='student_live_class'),
+    path('generate_student_zego_token/<int:id>/',views.generate_student_zego_token,name='generate_student_zego_token')
     ]
 
